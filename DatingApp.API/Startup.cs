@@ -1,10 +1,13 @@
 ﻿using DatingApp.API.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace DatingApp.API
 {
@@ -32,6 +35,38 @@ namespace DatingApp.API
             // No 'Access-Control-Allow-Origin' header is present on the requested resource.
             // We will add a little bit loose cross-origin resource sharing policy to our API
             services.AddCors();
+
+            // Register AuthRepository and make it available for dependency injection
+            // throughout the app.  
+            // AddSingleton -- which means we will create a single instance of our Repository 
+            // throughout the application but this will create some issues with concurrent 
+            // http request
+            // AddTransient -- useful for lightweight stateless services because these are
+            // created each time they are requested
+            // AddScoped -- which means the service is created per request within the scope
+            // of the same http request.  Equivalent to AddSingleton but in the current scope
+            // itself.  It creates one instance for each different http request but uses the same
+            // instance in other codes within the same work request.  Suitable for the Repository
+            // that we are creating.
+            // In order to use AddScoped, we will specify the interface and the 
+            // concrete implementation of the interface
+            services.AddScoped<IAuthRepository, AuthRepository>();
+
+            // We need to add authentication middleware as a service and we need to tell ASP.NET Core
+            // what type of authentication we are using
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
+                            .GetBytes(Configuration.GetSection("SecuritySettings:Token").Value)),
+                        // Our issuer and audience is localhost so we don't need to validate
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +80,9 @@ namespace DatingApp.API
             // We need to call this before we will be calling UseMvc()
             // This is very loose policy and is suitable only when developing
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            // We can now tell our applicatin about the authentication we have setup
+            app.UseAuthentication();
 
             app.UseMvc();
         }
