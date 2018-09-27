@@ -23,6 +23,7 @@ namespace DatingApp.API.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         // GET: api/Values
         [HttpGet]
         public IEnumerable<Value> GetValues()

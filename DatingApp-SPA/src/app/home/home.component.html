@@ -1,0 +1,38 @@
+<!--
+    container -- Bootstrap provide a bit of sensoring and padding around the content inside the container
+    mt-5 -- Represents a bootstrap margin. mt means margin-top and 5 is an element of distance from the top
+-->
+<div class="container mt-5">
+
+  <div *ngIf="!registerMode" style="text-align: center">
+    <h1>Find your match</h1>
+    <p class="lead">Come on in to view your matches... All you need to do is sign up!</p>
+    <div class="text-center">
+      <!--
+        Add mr-2 for spacing  
+      -->
+      <button class="btn btn-primary btn-lg mr-2" (click)="registerToggle()">Register</button>
+      <button class="btn btn-info btn-lg">Learn more</button>
+    </div>
+  </div>
+
+  <div *ngIf="registerMode" class="container">
+    <div class="row justify-content-center">
+      <!--
+          A bootstrap grid is made up of 12 columns in total.
+          We are going to use 4 of them to show our register form.
+      -->
+      <div class="col-4">
+        <!--
+            This will demonstrate a parent to child component communication using input properties
+            We are getting 'values' from the API in this home.component.ts.  Now, we want to pass it to
+            register.component.ts so that it can be used in the dropdown for the username field in the
+            the registration form.
+            The [valuesFromHome] is the input property.
+        -->
+        <app-register [valuesFromHome]="values"></app-register>
+      </div>
+    </div>
+  </div>
+
+</div>
