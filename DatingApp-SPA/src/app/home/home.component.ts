@@ -17,10 +17,6 @@ export class HomeComponent implements OnInit {
     this.getValues();
   }
 
-  registerToggle() {
-    this.registerMode = !this.registerMode;
-  }
-
   getValues() {
 
     // Observable -- is a stream of data that is coming back from the server and in order
@@ -31,6 +27,10 @@ export class HomeComponent implements OnInit {
       }, error => {
         console.log(error);
       })
+  }
+
+  setRegisterMode(mode: boolean) {
+    this.registerMode = mode;
   }
 
 }

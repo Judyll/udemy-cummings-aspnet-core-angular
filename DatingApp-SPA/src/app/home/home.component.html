@@ -11,7 +11,7 @@
       <!--
         Add mr-2 for spacing  
       -->
-      <button class="btn btn-primary btn-lg mr-2" (click)="registerToggle()">Register</button>
+      <button class="btn btn-primary btn-lg mr-2" (click)="setRegisterMode(true)">Register</button>
       <button class="btn btn-info btn-lg">Learn more</button>
     </div>
   </div>
@@ -29,8 +29,14 @@
             register.component.ts so that it can be used in the dropdown for the username field in the
             the registration form.
             The [valuesFromHome] is the input property.
+
+            This will also demonstrate a child to parent component communication using output properties
+            by emitting an output from our child component register.component which will be then received by our
+            parent component home.component.  The (cancelRegister) is an event method in our child component
+            register.component which emits a boolean value and the setRegisterMode($event) is an method in our
+            parent component home.component which accepts boolean as a parameter.
         -->
-        <app-register [valuesFromHome]="values"></app-register>
+        <app-register [valuesFromHome]="values" (cancelRegister)="setRegisterMode($event)"></app-register>
       </div>
     </div>
   </div>

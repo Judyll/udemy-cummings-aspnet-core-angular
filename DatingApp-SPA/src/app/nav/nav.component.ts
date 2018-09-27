@@ -18,7 +18,7 @@ export class NavComponent implements OnInit {
   login() {
     // We will subscribe to the login method which is an observable
     // and we need to do on the next, and error options
-    this.authService.login(this.model).subscribe(next => {
+    this.authService.login(this.model).subscribe(success => {
       console.log('Logged in successfully');
     }, error => {
       console.log('Failed to login');
