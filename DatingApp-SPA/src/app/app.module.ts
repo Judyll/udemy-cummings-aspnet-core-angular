@@ -8,13 +8,14 @@ import { NavComponent } from './nav/nav.component';
 import { AuthService } from './_services/auth.service';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
+import { ErrorInterceptorProvider } from './_services/error.interceptor';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     HomeComponent,
-    RegisterComponent
+    RegisterComponent    
   ],
   imports: [
     BrowserModule,
@@ -27,8 +28,10 @@ import { RegisterComponent } from './register/register.component';
     FormsModule
   ],
   // Add the services we have created
+  // Add the error interceptors
   providers: [
-    AuthService
+    AuthService,
+    ErrorInterceptorProvider    
   ],
   // When the module is loaded, its gonna bootstrap the AppComponent which is the app.component.ts
   bootstrap: [AppComponent] 

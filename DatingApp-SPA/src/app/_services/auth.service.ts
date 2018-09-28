@@ -35,7 +35,7 @@ export class AuthService {
     // The response will return a token (as seen in Postman).  And in order to do Observable when it comes back
     // from the server, we need to use rxjs operator.  We are using rxjs 6 for this course since we are using Angular 6.    
     return this.http.post(this.baseUrl + 'login', model)
-      // And in order to use rxjs operators in Angular 6, we need to pass it through a pipe() method.
+      // And in order to use rxjs map operators in Angular 6, we need to pass it through a pipe() method.
       // This allows us to chain rxjs operators with our request
       // We already know (from Postman), that we will get an object as a return for this request with 'token' as key and
       // the actual token as value as defined in \DatingApp.API\Controllers\AuthController.cs
@@ -46,6 +46,7 @@ export class AuthService {
       //    token = tokenHandler.WriteToken(token)
       //  });
       .pipe(
+        // We are now using the rxjs map operator
         // We will pass in the response
         map((response: any) => {
           // This will contain the token response
