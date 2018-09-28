@@ -1,8 +1,11 @@
+// Node modules
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { BsDropdownModule } from 'ngx-bootstrap';
 
+// Local components
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { AuthService } from './_services/auth.service';
@@ -26,7 +29,8 @@ import { AlertifyService } from './_services/alertify.service';
     // constructor like constructor(private http:HttpClient)
     HttpClientModule,
     // We need to tell Angular we will be using the Forms module which is used for submitting username and password
-    FormsModule
+    FormsModule,
+    BsDropdownModule.forRoot()
   ],
   // Add the services we have created
   // Add the error interceptors

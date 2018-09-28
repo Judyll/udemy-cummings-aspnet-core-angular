@@ -1,40 +1,46 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Dating App</a>
 
-  <ul class="navbar-nav mr-auto">
-    <li class="nav-item active">
-      <a class="nav-link" href="#">Matches</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Lists</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Messages</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" (click)="logOut()">Logout</a>
-    </li>
-  </ul>
+  <div class="container">
 
-  <!--
+    <a class="navbar-brand" href="#">Dating App</a>
+
+    <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Matches</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Lists</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Messages</a>
+      </li>
+    </ul>
+
+    <!--
       Copied from https://getbootstrap.com/docs/4.1/components/dropdowns/
 
       We will use a structural directive *ngIf to determine if the user has loggedIn().  This will change the DOM.
+
+      We also specified the 'dropdown', 'dropdownToggle', and '*dropdownMenu'
+      directive from ngx-boostrap package
   -->
-  <div *ngIf="loggedIn()" class="dropdown">
-    <a class="dropdown-toggle text-light">
-      <!--Add a pipe titlecase which converts the output into title case-->
-      Welcome {{authService.decodedToken?.unique_name | titlecase}}
-    </a>
+    <div *ngIf="loggedIn()" class="dropdown" dropdown>
+      <a class="dropdown-toggle text-light" style="cursor: pointer"
+         dropdownToggle (click)="false">
+        <!--Add a pipe titlecase which converts the output into title case-->
+        Welcome {{authService.decodedToken?.unique_name | titlecase}}
+      </a>
 
-    <div class="dropdown-menu">
-      <a class="dropdown-item" href="#"><i class="fa fa-user"></i>Edit Profile</a>
-      <div class="dropdown-divider"></div>
-      <a class="dropdown-item" href="#"><i class="fa fa-sign-out"></i>Logout</a>
+      <div class="dropdown-menu mt-3" *dropdownMenu>
+        <a class="dropdown-item" href="#"><i class="fa fa-user"></i> Edit Profile</a>
+        <div class="dropdown-divider"></div>
+        <!--If we remove the href="", the cursor will be change as text cursor instead of pointer-->
+        <a class="dropdown-item" style="cursor: pointer" (click)="logOut()">
+          <i class="fa fa-sign-out"></i> Logout</a>
+      </div>
     </div>
-  </div>
 
-  <!--
+    <!--
       We will convert this html form into Angular form.  There are two types of form in Angular: template and reactive.
       For now, we will use template
       We will create a template reference variable by using the pound/hash sign. Ex. #loginForm, #modelUsername,
@@ -44,16 +50,18 @@
       We also need a way for the users to submit the form, so for this, we need the (ngSubmit) event.  We will add it on
       the form level instead of the button.
   -->
-  <form *ngIf="!loggedIn()" #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
-    <input class="form-control mr-sm-2" type="text" name="input-username"
-           placeholder="Username" required [(ngModel)]="model.username" #modelUsername="ngModel" />
-    <input class="form-control mr-sm-2" type="password" name="input-password"
-           placeholder="Password" required [(ngModel)]="model.password" #modelPassword="ngModel" />
-    <!--
+    <form *ngIf="!loggedIn()" #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
+      <input class="form-control mr-sm-2" type="text" name="input-username"
+             placeholder="Username" required [(ngModel)]="model.username" #modelUsername="ngModel" />
+      <input class="form-control mr-sm-2" type="password" name="input-password"
+             placeholder="Password" required [(ngModel)]="model.password" #modelPassword="ngModel" />
+      <!--
       We will make the button disabled once the form is not valid by getting the loinForm.valid value
     -->
-    <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
-  </form>
+      <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
+    </form>
+
+  </div> 
 
 </nav>
 

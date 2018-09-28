@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+// SOURCE: https://alertifyjs.com/
+
 // Probably might get a TsLint warning if we don't declare alertify on top of the
 // file.  We don't really need to import it since we already imported it via
 // the angular.json file
