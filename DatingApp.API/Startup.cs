@@ -1,12 +1,16 @@
 ﻿using DatingApp.API.Data;
+using DatingApp.API.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
 using System.Text;
 
 namespace DatingApp.API
@@ -75,6 +79,32 @@ namespace DatingApp.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                // If we are not in development, then we will use a global exception
+                // handler and this exception handler adds middleware to our pipeline
+                // that will catch exceptions, log them, and re-execute the request in an
+                // alternate pipeline.
+                app.UseExceptionHandler(builder => {
+                    // Adds a terminal middleware delegate to the application
+                    // request pipeline
+                    // The Run() method can access the http request/response context
+                    builder.Run(async context => {
+                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                        var error = context.Features.Get<IExceptionHandlerFeature>();
+
+                        if (error != null)
+                        {
+                            // We are going to extend context.Response so that we can add our
+                            // own custom error response headers
+                            context.Response.AddApplicationError(error.Error.Message);
+
+                            await context.Response.WriteAsync(error.Error.Message);                            
+                        }
+                    });
+                });
             }
 
             // We need to call this before we will be calling UseMvc()
