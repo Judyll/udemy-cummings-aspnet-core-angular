@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 // This allows us to make the service injectible.  Components does not need this decorator
 // since components are automatically injectible.
@@ -13,6 +14,7 @@ import { map } from 'rxjs/operators';
 export class AuthService {
 
   baseUrl = 'http://localhost:5000/api/auth/';
+  jwtHelper = new JwtHelperService();
 
   constructor(private http: HttpClient) { }
 
@@ -61,5 +63,28 @@ export class AuthService {
 
   register(model: any) {
     return this.http.post(this.baseUrl + 'register', model);
+  }
+
+  loggedIn() {
+    const token = localStorage.getItem('token');
+
+    // We will use a third party library called angular-jwt to manage the
+    // token we stored in the localStorage
+    // What we CANNOT DO is to validate the token since the key to validate the
+    // token is on the server \DatingApp.API\appsettings.json and we don't have
+    // access to that in the client application and we don't really need to do that
+    // in our client application since the client application is compiled into
+    // javascript and since javascript is run on the client-side, we don't want
+    // end-users to have access to the validation key
+
+    // Confusing names: angular 1 is renamed as angularjs
+    // and angular 2 is renamed as angular
+
+    // @auth0/angular-jwt: https://github.com/auth0/angular2-jwt and go for
+    // version 2.0.0
+
+    // If there is a value in this token, and is not expired,
+    // then it will return true else it will return false
+    return !this.jwtHelper.isTokenExpired(token);
   }
 }
