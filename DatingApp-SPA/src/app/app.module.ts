@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap';
+import { RouterModule } from '@angular/router';
 
 // Local components
 import { AppComponent } from './app.component';
@@ -13,13 +14,20 @@ import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
 import { AlertifyService } from './_services/alertify.service';
+import { MemberListComponent } from './member-list/member-list.component';
+import { ListComponent } from './list/list.component';
+import { MessagesComponent } from './messages/messages.component';
+import { appRoutes } from './routes';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     HomeComponent,
-    RegisterComponent    
+    RegisterComponent,
+    MemberListComponent,
+    ListComponent,
+    MessagesComponent    
   ],
   imports: [
     BrowserModule,
@@ -30,7 +38,9 @@ import { AlertifyService } from './_services/alertify.service';
     HttpClientModule,
     // We need to tell Angular we will be using the Forms module which is used for submitting username and password
     FormsModule,
-    BsDropdownModule.forRoot()
+    BsDropdownModule.forRoot(),
+    // Add a router to our SPA which is defined in the routes.ts
+    RouterModule.forRoot(appRoutes) 
   ],
   // Add the services we have created
   // Add the error interceptors
