@@ -23,7 +23,8 @@
   -->
   <div *ngIf="loggedIn()" class="dropdown">
     <a class="dropdown-toggle text-light">
-      Welcome User
+      <!--Add a pipe titlecase which converts the output into title case-->
+      Welcome {{authService.decodedToken?.unique_name | titlecase}}
     </a>
 
     <div class="dropdown-menu">
