@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
+// Provides the navigation and url manipulation capabilities
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -12,7 +14,7 @@ export class NavComponent implements OnInit {
   model: any = {};
 
   constructor(private authService: AuthService,
-    private alertify: AlertifyService) { }
+    private alertify: AlertifyService, private router: Router) { }
 
   ngOnInit() {
   }
@@ -24,6 +26,13 @@ export class NavComponent implements OnInit {
       this.alertify.success('Logged in successfully');
     }, error => {
       this.alertify.error(error);
+    }, () => {
+      // We will use an anonymous function for the 'complete' 3rd parameter of the
+      // subscribe method.
+      // We will us this to add additional option for our router though we can also
+      // achieve the same effect when we will place this code under 'successs' 1st parameter
+      // We will be routed to the /members page as defined in the routes.ts
+      this.router.navigate(['/members']);
     });
   }
 
@@ -53,6 +62,7 @@ export class NavComponent implements OnInit {
   logOut() {
     localStorage.removeItem('token');
     this.alertify.message('Logged out');
+    this.router.navigate(['/home']);
   }
 
 }
