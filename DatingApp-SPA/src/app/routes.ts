@@ -3,6 +3,7 @@ import { HomeComponent } from './home/home.component';
 import { MemberListComponent } from './member-list/member-list.component';
 import { MessagesComponent } from './messages/messages.component';
 import { ListComponent } from './list/list.component';
+import { AuthGuard } from './_guards/auth.guard';
 
 export const appRoutes: Routes = [
   // When the user is adding a url, or clicks on a link, or adding some path to the
@@ -11,7 +12,7 @@ export const appRoutes: Routes = [
   // then it gonna use the wild card and it's gonna redirect to home.  So, the ordering
   // of these routes is important.
   { path: 'home', component: HomeComponent },
-  { path: 'members', component: MemberListComponent },
+  { path: 'members', component: MemberListComponent, canActivate: [AuthGuard] },
   { path: 'messages', component: MessagesComponent },
   { path: 'list', component: ListComponent },
   // redirect to the full path of the home URL 
