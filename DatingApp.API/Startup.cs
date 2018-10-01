@@ -1,4 +1,5 @@
-﻿using DatingApp.API.Data;
+﻿using AutoMapper;
+using DatingApp.API.Data;
 using DatingApp.API.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -84,6 +85,9 @@ namespace DatingApp.API
                         ValidateAudience = false
                     };
                 });
+
+            // Add the AutoMapper services
+            services.AddAutoMapper();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
