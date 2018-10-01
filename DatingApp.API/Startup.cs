@@ -30,7 +30,16 @@ namespace DatingApp.API
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                // The below option fixes issues like the below
+                // fail: Microsoft.AspNetCore.Server.Kestrel[13]
+                // Connection id "0HLH7GM9OPUNC", Request id "0HLH7GM9OPUNC:00000001": An unhandled exception was thrown by the application.
+                // Newtonsoft.Json.JsonSerializationException: Self referencing loop detected for property 'user' with type 'DatingApp.API.Models.User'.Path '[0].photos[0]'.
+                // This error in Postman is only shown as ==> Expected ',' instead of ''
+                .AddJsonOptions(options => {
+                    options.SerializerSettings.ReferenceLoopHandling = 
+                    Newtonsoft.Json.ReferenceLoopHandling.Ignore;                    
+                });
 
             // CORS - Cross-Origin Resource Sharing.  It is a security measure which allows which
             // client to access our API.
