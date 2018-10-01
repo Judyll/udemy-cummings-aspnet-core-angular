@@ -56,6 +56,9 @@ namespace DatingApp.API
             // concrete implementation of the interface
             services.AddScoped<IAuthRepository, AuthRepository>();
 
+            // Add the Seed class
+            services.AddTransient<Seed>();
+
             // We need to add authentication middleware as a service and we need to tell ASP.NET Core
             // what type of authentication we are using
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -74,7 +77,8 @@ namespace DatingApp.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, 
+            Seed seeder)
         {
             if (env.IsDevelopment())
             {
@@ -106,6 +110,10 @@ namespace DatingApp.API
                     });
                 });
             }
+
+            // Seed the users
+            // Just uncomment this if we ever we need to seed our database
+            //seeder.SeedUsers();
 
             // We need to call this before we will be calling UseMvc()
             // This is very loose policy and is suitable only when developing
