@@ -55,6 +55,7 @@ namespace DatingApp.API
             // In order to use AddScoped, we will specify the interface and the 
             // concrete implementation of the interface
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IDatingRepository, DatingRepository>();
 
             // Add the Seed class
             services.AddTransient<Seed>();
