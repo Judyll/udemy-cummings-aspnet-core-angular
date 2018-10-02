@@ -1,0 +1,18 @@
+/*Transforms the image by zooming-in/out when the user do a mouse over*/
+.card:hover img{
+  transform: scale(1.2, 1.2);
+  transition-duration: 500ms;
+  transition-timing-function: ease-out;
+  opacity: 0.7; 
+}
+
+.card img{
+  transform: scale(1.0, 1.0);
+  transition-duration: 500ms;
+  transition-timing-function: ease-out;
+}
+
+/*Prevent the image from zooming in outside from the card wrapper*/
+.card-img-wrapper{
+  overflow: hidden;
+}
