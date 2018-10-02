@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DatingApp.API.Dtos;
 using DatingApp.API.Models;
+using System.Linq;
 
 namespace DatingApp.API.Helpers
 {
@@ -21,8 +22,34 @@ namespace DatingApp.API.Helpers
             // each other.  But since we have an UserForListDto.Age and UserForListDto.PhotoUrl
             // property which is not found in the User class, then we need to add a 
             // configuration.
-            CreateMap<User, UserForListDto>();
-            CreateMap<User, UserForDetailedDto>();
+            CreateMap<User, UserForListDto>()
+                // This allows us to customize configuration for individual member
+                // in our class
+                // The first part of this method is the destination and then we will
+                // give it some options and add the source value for the destination
+                // property PhotoUrl
+                .ForMember(destination => destination.PhotoUrl, options => {
+                    options.MapFrom(source => 
+                    source.Photos.FirstOrDefault(f => f.IsMain).Url);
+                })
+                // For the Age, we don't have any source property we can directly map
+                // since this field should be calculated.
+                // We can use ResolveUsing to resolve destination member using a custom
+                // value resolver callback
+                // We will add in the DatingApp.API.Helpers.Extensions a method that will
+                // compute the age
+                .ForMember(destination => destination.Age, options => {
+                    options.ResolveUsing(r => r.DateOfBirth.CalculateAge());
+                });
+            CreateMap<User, UserForDetailedDto>()
+                .ForMember(destination => destination.PhotoUrl, options => {
+                    options.MapFrom(source =>
+                    source.Photos.FirstOrDefault(f => f.IsMain).Url);
+                })
+                .ForMember(destination => destination.Age, options => {
+                    options.ResolveUsing(r => r.DateOfBirth.CalculateAge());
+                });
+            CreateMap<Photo, PhotoForDetailedDto>();
         }
     }
 }
