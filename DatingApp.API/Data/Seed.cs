@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DatingApp.API.Data
 {
@@ -17,6 +16,8 @@ namespace DatingApp.API.Data
 
         public void SeedUsers()
         {
+            //Source: https://www.json-generator.com/
+
             var userData = System.IO.File.ReadAllText("Data/UserSeedData.json");
             var users = JsonConvert.DeserializeObject<List<User>>(userData);
 
