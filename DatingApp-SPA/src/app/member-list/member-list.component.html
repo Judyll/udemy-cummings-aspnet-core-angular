@@ -1,3 +1,18 @@
-<p>
-  member-list works!
-</p>
+<div class="container">
+  <div class="row">
+    <!--
+        Bootstrap uses 12 columns
+        This means on a large screen (lg), columns are made up of 2 grid columns which
+        means there would be 6 elements line-up on the page
+        In a medium screen (md), columns are made up of 3 grid columns which means
+        there would be 4 elements line-up on the page
+        In a small screen (sm), columns are made up of 6 grid columns which means
+        there would be 2 elements line-up on the page
+    -->
+    <div class="col-lg-2 col-md-3 col-sm-6">
+      <p *ngFor="let user of users">
+        {{user.knownAs}}
+      </p>
+    </div>
+  </div>
+</div>
