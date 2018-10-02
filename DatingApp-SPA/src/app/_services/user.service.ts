@@ -8,13 +8,16 @@ import { User } from '../_models/user';
 // authorization token with the request.
 // The http.get() method can also take some options and inside the options can be the
 // headers like in Postman the 'Authorization' header
+
+// We will only need this if we don't configure JwtModule in app.module.ts
+
 // We will now create a header
-const httpOptions = {
-  headers: new HttpHeaders({
-    // Do not forget the 'space' after the 'Bearer'
-    'Authorization': 'Bearer ' + localStorage.getItem('token')
-  })
-}
+//const httpOptions = {
+//  headers: new HttpHeaders({
+//    // Do not forget the 'space' after the 'Bearer'
+//    'Authorization': 'Bearer ' + localStorage.getItem('token')
+//  })
+//}
 
 @Injectable({
   providedIn: 'root'
@@ -27,10 +30,12 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.baseUrl + 'users/', httpOptions);
+    //return this.http.get<User[]>(this.baseUrl + 'users/', httpOptions);
+    return this.http.get<User[]>(this.baseUrl + 'users');
   }
 
   getUser(id): Observable<User> {
-    return this.http.get<User>(this.baseUrl + 'users/' + id, httpOptions);
+    //return this.http.get<User>(this.baseUrl + 'users/' + id, httpOptions);
+    return this.http.get<User>(this.baseUrl + 'users/' + id);
   }
 }

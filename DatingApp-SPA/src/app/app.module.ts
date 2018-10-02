@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap';
 import { RouterModule } from '@angular/router';
+import { JwtModule } from '@auth0/angular-jwt';
 
 // Local components
 import { AppComponent } from './app.component';
@@ -21,6 +22,15 @@ import { appRoutes } from './routes';
 import { AuthGuard } from './_guards/auth.guard';
 import { UserService } from './_services/user.service';
 import { MemberCardComponent } from './members/member-card/member-card.component';
+
+// Added a new way to handle the tokens using JwtModule.
+// We will get the token inside our app.module.ts, we will import the JwtModule
+// and we will configure it to send up the token for any domain listed in the
+// 'whitelistedDomain' and any 'blacklistedDomain' route we are not going
+// to send the token with.
+export function tokenGetter() {
+  return localStorage.getItem('token');
+}
 
 @NgModule({
   declarations: [
@@ -44,7 +54,16 @@ import { MemberCardComponent } from './members/member-card/member-card.component
     FormsModule,
     BsDropdownModule.forRoot(),
     // Add a router to our SPA which is defined in the routes.ts
-    RouterModule.forRoot(appRoutes) 
+    RouterModule.forRoot(appRoutes),
+    // Imports the JwtModule so that we can send the token automatically when
+    // we will do an API request
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        whitelistedDomains: ['localhost:5000'],
+        blacklistedRoutes: ['localhost:5000/api/auth']
+      }
+    })
   ],
   // Add the services we have created
   // Add the error interceptors
