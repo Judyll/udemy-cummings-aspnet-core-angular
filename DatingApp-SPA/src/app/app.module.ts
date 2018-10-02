@@ -22,6 +22,7 @@ import { appRoutes } from './routes';
 import { AuthGuard } from './_guards/auth.guard';
 import { UserService } from './_services/user.service';
 import { MemberCardComponent } from './members/member-card/member-card.component';
+import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 
 // Added a new way to handle the tokens using JwtModule.
 // We will get the token inside our app.module.ts, we will import the JwtModule
@@ -41,7 +42,8 @@ export function tokenGetter() {
     MemberListComponent,
     ListComponent,
     MessagesComponent,
-    MemberCardComponent    
+    MemberCardComponent,
+    MemberDetailComponent    
   ],
   imports: [
     BrowserModule,
@@ -56,7 +58,8 @@ export function tokenGetter() {
     // Add a router to our SPA which is defined in the routes.ts
     RouterModule.forRoot(appRoutes),
     // Imports the JwtModule so that we can send the token automatically when
-    // we will do an API request
+    // we will do an API request rather than creating headers manually as
+    // example found in user.services.ts
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

@@ -4,6 +4,7 @@ import { MemberListComponent } from './members/member-list/member-list.component
 import { MessagesComponent } from './messages/messages.component';
 import { ListComponent } from './list/list.component';
 import { AuthGuard } from './_guards/auth.guard';
+import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 
 export const appRoutes: Routes = [
   // When the user is adding a url, or clicks on a link, or adding some path to the
@@ -22,6 +23,8 @@ export const appRoutes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: 'members', component: MemberListComponent },
+      // :id -- is how we specify the parameter of the route
+      { path: 'members/:id', component: MemberDetailComponent },
       { path: 'messages', component: MessagesComponent },
       { path: 'list', component: ListComponent }
     ]

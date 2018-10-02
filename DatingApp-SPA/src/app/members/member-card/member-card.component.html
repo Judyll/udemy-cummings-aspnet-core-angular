@@ -27,7 +27,7 @@
     <ul class="list-inline member-icons animate text-center">
       <!--Redirect them to the user information-->
       <li class="list-inline-item">
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" [routerLink]="['/members/', user.id]">
           <i class="fa fa-user"></i>
         </button>
       </li>
