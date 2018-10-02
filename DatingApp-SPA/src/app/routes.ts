@@ -5,6 +5,8 @@ import { MessagesComponent } from './messages/messages.component';
 import { ListComponent } from './list/list.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
+import { MemberDetailResolver } from './_resolver/member-detail.resolver';
+import { MemberListResolver } from './_resolver/member-list.resolver';
 
 export const appRoutes: Routes = [
   // When the user is adding a url, or clicks on a link, or adding some path to the
@@ -22,9 +24,16 @@ export const appRoutes: Routes = [
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
     children: [
-      { path: 'members', component: MemberListComponent },
+      {
+        path: 'members', component: MemberListComponent,
+        resolve: { users: MemberListResolver }
+      },
       // :id -- is how we specify the parameter of the route
-      { path: 'members/:id', component: MemberDetailComponent },
+      // The resolver will return a single type 'user' as define in the member-detail.resolver.ts
+      {
+        path: 'members/:id', component: MemberDetailComponent,
+        resolve: { user: MemberDetailResolver }
+      },
       { path: 'messages', component: MessagesComponent },
       { path: 'list', component: ListComponent }
     ]

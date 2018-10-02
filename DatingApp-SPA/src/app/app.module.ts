@@ -23,6 +23,8 @@ import { AuthGuard } from './_guards/auth.guard';
 import { UserService } from './_services/user.service';
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
+import { MemberDetailResolver } from './_resolver/member-detail.resolver';
+import { MemberListResolver } from './_resolver/member-list.resolver';
 
 // Added a new way to handle the tokens using JwtModule.
 // We will get the token inside our app.module.ts, we will import the JwtModule
@@ -78,7 +80,9 @@ export function tokenGetter() {
     ErrorInterceptorProvider,
     AlertifyService,
     AuthGuard,
-    UserService
+    UserService,
+    MemberDetailResolver,
+    MemberListResolver
   ],
   // When the module is loaded, its gonna bootstrap the AppComponent which is the app.component.ts
   bootstrap: [AppComponent] 

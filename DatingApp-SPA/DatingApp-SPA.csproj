@@ -7,6 +7,8 @@
 
   <ItemGroup>
     <None Remove="src\app\routes.ts" />
+    <None Remove="src\app\_resolver\member-detail.resolver.ts" />
+    <None Remove="src\app\_resolver\member-list.resolver.ts" />
     <None Remove="src\app\_services\error.interceptor.ts" />
   </ItemGroup>
 
@@ -22,6 +24,8 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="src\app\routes.ts" />
+    <TypeScriptCompile Include="src\app\_resolver\member-detail.resolver.ts" />
+    <TypeScriptCompile Include="src\app\_resolver\member-list.resolver.ts" />
     <TypeScriptCompile Include="src\app\_services\error.interceptor.ts" />
   </ItemGroup>
 

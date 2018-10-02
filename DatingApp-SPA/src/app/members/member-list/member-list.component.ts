@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../../_models/user';
 import { UserService } from '../../_services/user.service';
 import { AlertifyService } from '../../_services/alertify.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-member-list',
@@ -14,18 +15,32 @@ export class MemberListComponent implements OnInit {
 
   users: User[];
 
-  constructor(private userService: UserService, private alertify: AlertifyService) { }
+  constructor(private userService: UserService, private alertify: AlertifyService,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.loadUsers();
-  }
-
-  loadUsers() {
-    this.userService.getUsers().subscribe((success: User[]) => {
-      this.users = success;
-    }, error => {
-      this.alertify.error(error);
+    // We are going to pass the data to the route and retrieve the data from the route
+    // resolver itself so that there is no way this component will be loaded without
+    // the data available.
+    // This will prevent member-list.component.html from using elvies / ? / save navigation operator
+    // to fix the error ERROR TypeError: Cannot read property 'knownAs' of undefined
+    // We are now getting the data from the 'route' itself as defined in the routes.ts
+    // for the member-list.component.ts (MemberListComponent) which is assigned to the
+    // member-list.resolver.ts (MemberListResolver) where success['users'] is the property
+    // name that we gave in the routes.ts.
+    this.route.data.subscribe(success => {
+      this.users = success['users'];
     });
   }
+
+  // We no longer need this since we are using resolvers member-list.resolver.ts to
+  // get the data
+  //loadUsers() {
+  //  this.userService.getUsers().subscribe((success: User[]) => {
+  //    this.users = success;
+  //  }, error => {
+  //    this.alertify.error(error);
+  //  });
+  //}
 
 }
