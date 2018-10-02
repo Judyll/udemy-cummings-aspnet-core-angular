@@ -1,0 +1,19 @@
+/*Adjust the .img-thumbnail*/
+.img-thumbnail{
+  margin: 25px;
+  width: 85%;
+  height: 85%;
+}
+
+.card-body{
+  /*Take away the padding on top and bottom and set the left and right to 25px*/
+  padding: 0 25px;
+}
+
+.card-footer{
+  /*Add 10px padding top and button and 15px left and right*/
+  padding: 10px 15px;
+  /*Background #fff to match the color of the rest of the component*/
+  background-color: #fff;
+  border-top: none;
+}
