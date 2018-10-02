@@ -1,0 +1,20 @@
+<!--
+
+  We are going to use the card component from Bootstrap.
+  Source: https://getbootstrap.com/docs/4.1/components/card/
+
+-->
+
+<!--mb for margin bottom-->
+<div class="card mb-4">
+  <div class="card-img-wrapper">
+    <img class="card-img-top" src="{{user.photoUrl}}" alt="{{user.knownAs}}" />
+  </div>
+  <!--p for padding-->
+  <div class="card-body p-1">
+    <h6 class="card-title text-center mb-1"><i class="fa fa-user"></i>
+      {{user.knownAs}}, {{user.age}}
+    </h6>
+    <p class="card-text text-muted text-center">{{user.city}}</p>
+  </div>
+</div>

@@ -1,4 +1,5 @@
-<div class="container">
+<!--mt for margin top-->
+<div class="container mt-5">
   <div class="row">
     <!--
         Bootstrap uses 12 columns
@@ -9,10 +10,9 @@
         In a small screen (sm), columns are made up of 6 grid columns which means
         there would be 2 elements line-up on the page
     -->
-    <div class="col-lg-2 col-md-3 col-sm-6">
-      <p *ngFor="let user of users">
-        {{user.knownAs}}
-      </p>
+    <div *ngFor="let user of users" class="col-lg-2 col-md-3 col-sm-6">
+      <!--[ ] square bracket for input and ( ) for output-->
+      <app-member-card [user]="user"></app-member-card>
     </div>
   </div>
 </div>

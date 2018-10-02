@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../_models/user';
-import { UserService } from '../_services/user.service';
-import { AlertifyService } from '../_services/alertify.service';
+
+// We need to go UP an extra level '../../' because we are now on 2 levels lower 
+import { User } from '../../_models/user';
+import { UserService } from '../../_services/user.service';
+import { AlertifyService } from '../../_services/alertify.service';
 
 @Component({
   selector: 'app-member-list',
