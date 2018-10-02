@@ -11,8 +11,39 @@
 
 <!--mb for margin bottom-->
 <div class="card mb-4">
+  <!--
+      If we want to absolutely position the user, heart, and envelope buttons, then the container
+      which is the <div class="card-img-wrapper"> should be relatively positioned element
+  -->
   <div class="card-img-wrapper">
     <img class="card-img-top" src="{{user.photoUrl}}" alt="{{user.knownAs}}" />
+    <!--
+        Add an ordered list of buttons which are inline so that the buttons will
+        appear horizontally align.  We will also give it a class of .member-icons
+        so that we can have the ability to style it.  We will also give it an
+        .animate class so that we can add animate styles to the button. And we will
+        add .text-center class so that the buttons will be aligned to each member card
+    -->
+    <ul class="list-inline member-icons animate text-center">
+      <!--Redirect them to the user information-->
+      <li class="list-inline-item">
+        <button class="btn btn-primary">
+          <i class="fa fa-user"></i>
+        </button>
+      </li>
+      <!--Button to hit 'like' the user-->
+      <li class="list-inline-item">
+        <button class="btn btn-primary">
+          <i class="fa fa-heart"></i>
+        </button>
+      </li>
+      <!--Button to send the user a message-->
+      <li class="list-inline-item">
+        <button class="btn btn-primary">
+          <i class="fa fa-envelope"></i>
+        </button>
+      </li>
+    </ul>
   </div>
   <!--p for padding-->
   <div class="card-body p-1">

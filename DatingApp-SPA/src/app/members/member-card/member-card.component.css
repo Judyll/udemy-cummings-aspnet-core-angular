@@ -15,4 +15,29 @@
 /*Prevent the image from zooming in outside from the card wrapper*/
 .card-img-wrapper{
   overflow: hidden;
+  /*This will allow the user, heart, and envelop buttons to be positioned abolutely as
+    defined in the .member-icons below.
+  */
+  position: relative;
+}
+
+.member-icons{
+  position: absolute;
+  bottom: -30%;
+  left: 0;
+  right: 0;
+  margin-right: auto;
+  margin-left: auto;
+  opacity: 0;
+}
+
+/*This takes effect on our user, heart, and envelope buttons when the user hovers over*/
+.card-img-wrapper:hover .member-icons{
+  bottom: 0;
+  opacity: 1;
+}
+
+/*Add animation that slides-up the user, heart, and envelope buttons rather than pop-in*/
+.animate{
+  transition: all 0.3s ease-in-out;
 }
