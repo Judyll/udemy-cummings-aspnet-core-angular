@@ -7,6 +7,8 @@ import { AuthGuard } from './_guards/auth.guard';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberDetailResolver } from './_resolver/member-detail.resolver';
 import { MemberListResolver } from './_resolver/member-list.resolver';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { MemberEditResolver } from './_resolver/member-edit.resolver';
 
 export const appRoutes: Routes = [
   // When the user is adding a url, or clicks on a link, or adding some path to the
@@ -33,6 +35,12 @@ export const appRoutes: Routes = [
       {
         path: 'members/:id', component: MemberDetailComponent,
         resolve: { user: MemberDetailResolver }
+      },
+      // We will not pass the Id for the member that we want to edit
+      // Instead, we will use the decoded token for whoever is logging in
+      {
+        path: 'member/edit', component: MemberEditComponent,
+        resolve: { user: MemberEditResolver }
       },
       { path: 'messages', component: MessagesComponent },
       { path: 'list', component: ListComponent }

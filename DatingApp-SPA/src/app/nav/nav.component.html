@@ -34,11 +34,14 @@
       </a>
 
       <div class="dropdown-menu mt-3" *dropdownMenu>
-        <a class="dropdown-item" href="#"><i class="fa fa-user"></i> Edit Profile</a>
+        <a class="dropdown-item" [routerLink]="['/member/edit']">
+          <i class="fa fa-user"></i> Edit Profile
+        </a>
         <div class="dropdown-divider"></div>
         <!--If we remove the href="", the cursor will be change as text cursor instead of pointer-->
         <a class="dropdown-item" style="cursor: pointer" (click)="logOut()">
-          <i class="fa fa-sign-out"></i> Logout</a>
+          <i class="fa fa-sign-out"></i> Logout
+        </a>
       </div>
     </div>
 
