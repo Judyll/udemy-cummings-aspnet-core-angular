@@ -3,6 +3,7 @@ import { User } from '../../_models/user';
 import { UserService } from '../../_services/user.service';
 import { AlertifyService } from '../../_services/alertify.service';
 import { ActivatedRoute } from '@angular/router';
+import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
 
 @Component({
   selector: 'app-member-detail',
@@ -12,6 +13,9 @@ import { ActivatedRoute } from '@angular/router';
 export class MemberDetailComponent implements OnInit {
 
   user: User;
+
+  galleryOptions: NgxGalleryOptions[];
+  galleryImages: NgxGalleryImage[];
 
   constructor(private userService: UserService, private alertify: AlertifyService,
     private route: ActivatedRoute) { }
@@ -29,6 +33,36 @@ export class MemberDetailComponent implements OnInit {
     this.route.data.subscribe(success => {
       this.user = success['user'];
     });
+
+    // Configure the gallery options and set how we want it to look
+    this.galleryOptions = [
+      {
+        width: '500px',
+        height: '500px',
+        imagePercent: 100,
+        thumbnailsColumns: 4,
+        imageAnimation: NgxGalleryAnimation.Slide,
+        preview: false
+      }
+    ];
+
+    this.galleryImages = this.getImages();
+  }
+
+  getImages() {
+
+    const imageUrls = [];
+
+    for (let i = 0; i < this.user.photos.length; i++) {
+      imageUrls.push({
+        small: this.user.photos[i].url,
+        medium: this.user.photos[i].url,
+        big: this.user.photos[i].url,
+        description: this.user.photos[i].description
+      });
+    }
+
+    return imageUrls;
   }
 
   // In the URL route, we are using /members/4 or members/2 or members/5 in which the numeric

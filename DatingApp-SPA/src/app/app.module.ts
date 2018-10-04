@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BsDropdownModule, TabsModule } from 'ngx-bootstrap';
 import { RouterModule } from '@angular/router';
+import { NgxGalleryModule } from 'ngx-gallery';
 import { JwtModule } from '@auth0/angular-jwt';
 
 // Local components
@@ -59,6 +60,8 @@ export function tokenGetter() {
     BsDropdownModule.forRoot(),
     // Add a router to our SPA which is defined in the routes.ts
     RouterModule.forRoot(appRoutes),
+    // Import the NGX Gallery for our image gallery
+    NgxGalleryModule,
     // Imports the JwtModule so that we can send the token automatically when
     // we will do an API request rather than creating headers manually as
     // example found in user.services.ts
