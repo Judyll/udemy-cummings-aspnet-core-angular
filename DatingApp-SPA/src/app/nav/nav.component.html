@@ -46,14 +46,21 @@
     </div>
 
     <!--
-      We will convert this html form into Angular form.  There are two types of form in Angular: template and reactive.
-      For now, we will use template
-      We will create a template reference variable by using the pound/hash sign. Ex. #loginForm, #modelUsername,
-      #modelPassword. The character ' - ' is not allowed. Ex. model-username.
-      We also need a two-way binding from our template (html) to our component (ts).  And in order to do that, we need
-      to use a directive called the ngModel directive [(ngModel)]="binding".
-      We also need a way for the users to submit the form, so for this, we need the (ngSubmit) event.  We will add it on
-      the form level instead of the button.
+        We will convert this html form into Angular form.  There are two types of form in Angular: template and reactive.
+        For now, we will use template
+        We will create a "template reference variable" by using the pound/hash sign. Ex. #loginForm, #modelUsername,
+        #modelPassword. The character ' - ' is not allowed. Ex. model-username.
+        We use #modelUsername or #modelPassword if we need to get its states.  We can just
+        remove that if we don't need to refer the input fields
+        Ex:
+          Username Valid: {{modelUsername.valid}}
+          Username Touched: {{modelUsername.touched}}
+          Username Dirty: {{modelUsername.dirty}}
+          Username Values: {{modelUsername.value | json}}
+        We also need a two-way binding from our template (html) to our component (ts).  And in order to do that, we need
+        to use a directive called the ngModel directive [(ngModel)]="binding".
+        We also need a way for the users to submit the form, so for this, we need the (ngSubmit) event.  We will add it on
+        the form level instead of the button.
   -->
     <form *ngIf="!loggedIn()" #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
       <input class="form-control mr-sm-2" type="text" name="input-username"
@@ -78,7 +85,7 @@
   Form Values: {{loginForm.value | json}}
   Username Valid: {{modelUsername.valid}}
   Username Touched: {{modelUsername.touched}}
-  Username Dirty: {{modelUsername.dirty}}
+  Username Dirty: {{modelUsername.dirty}
   Username Values: {{modelUsername.value | json}}
   Password Valid: {{modelPassword.valid}}
   Password Touched: {{modelPassword.touched}}

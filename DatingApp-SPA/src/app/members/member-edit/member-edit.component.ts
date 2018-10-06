@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from '../../_models/user';
 import { ActivatedRoute } from '@angular/router';
+import { AlertifyService } from '../../_services/alertify.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-member-edit',
@@ -9,9 +11,15 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class MemberEditComponent implements OnInit {
 
+  // We need to access the html form with id='editForm' since we need
+  // to reset its state once the save changes button is clicked so that
+  // the alert header will be hidden and the save changes button will be disabled
+  // again.  For this, we need the @ViewChild decorator
+  @ViewChild('editForm') editForm: NgForm;
+
   user: User;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private alertify: AlertifyService) { }
 
   ngOnInit() {
     // We are going to pass the data to the route and retrieve the data from the route
@@ -26,6 +34,18 @@ export class MemberEditComponent implements OnInit {
     this.route.data.subscribe(success => {
       this.user = success['user'];
     });
+  }
+
+  updateUser() {
+    console.log(this.user);
+
+    this.alertify.success('Profile updated successfully!');
+
+    // Reset the form control.  This means by default, it is marked as pristine, marked as
+    // untouched and value is set to null.
+    // Add the this.user as the parameter so that it will reset the elements and fill
+    // the controls with the bindings coming from the this.user variable
+    this.editForm.reset(this.user);
   }
 
 }

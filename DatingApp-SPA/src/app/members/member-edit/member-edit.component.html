@@ -16,8 +16,12 @@
     </div>
     <!--Column 2 which contains an alert that highlights the changes we have made-->
     <div class="col-sm-8">
-      <div class="alert alert-info">
-        <p><strong>Information:</strong> You have made changes.  Any unsaved changes will be lost!</p>
+      <!--
+          We will hide this and we will only show this once the user has changes being made
+          and he will exit the page without clicking the save button.
+      -->
+      <div *ngIf="editForm.dirty" class="alert alert-info">
+        <strong>Information:</strong> You have made changes.  Any unsaved changes will be lost!
       </div>
     </div>
   </div>
@@ -49,10 +53,12 @@
           </div>
         </div>
         <div class="card-footer">
-          <!--d-flex will give the <div> a display of flex-->
-          <div class="btn-group d-flex">
-            <button class="btn btn-success btn-block">Save Changes</button>
-          </div>
+          <!--
+              We assign this button to the form with id='editForm' so that
+              this will trigger the submit event of the form
+          -->
+          <button [disabled]="!editForm.dirty" form="editForm"
+                  class="btn btn-success btn-block">Save Changes</button>
         </div>
       </div>
     </div>
@@ -71,7 +77,12 @@
       -->
         <tabset class="member-tabset">
           <tab heading="Edit Profile">
-            <form>
+            <!--
+                We gave our form an attribute of 'id' since our 'Save Changes'
+                button does not belong to the form and we need to assign it
+                to the button element
+            -->
+            <form #editForm="ngForm" id="editForm" (ngSubmit)="updateUser()">
               <h4>Description</h4>
               <textarea class="form-control" name="introduction" rows="6"
                         [(ngModel)]="user.introduction"></textarea>
