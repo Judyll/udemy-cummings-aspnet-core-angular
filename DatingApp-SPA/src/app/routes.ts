@@ -9,6 +9,7 @@ import { MemberDetailResolver } from './_resolver/member-detail.resolver';
 import { MemberListResolver } from './_resolver/member-list.resolver';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberEditResolver } from './_resolver/member-edit.resolver';
+import { PreventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
 
 export const appRoutes: Routes = [
   // When the user is adding a url, or clicks on a link, or adding some path to the
@@ -40,7 +41,8 @@ export const appRoutes: Routes = [
       // Instead, we will use the decoded token for whoever is logging in
       {
         path: 'member/edit', component: MemberEditComponent,
-        resolve: { user: MemberEditResolver }
+        resolve: { user: MemberEditResolver },
+        canDeactivate: [PreventUnsavedChangesGuard]
       },
       { path: 'messages', component: MessagesComponent },
       { path: 'list', component: ListComponent }

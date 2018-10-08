@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { User } from '../../_models/user';
 import { ActivatedRoute } from '@angular/router';
 import { AlertifyService } from '../../_services/alertify.service';
@@ -11,13 +11,27 @@ import { NgForm } from '@angular/forms';
 })
 export class MemberEditComponent implements OnInit {
 
+  user: User;
+
   // We need to access the html form with id='editForm' since we need
   // to reset its state once the save changes button is clicked so that
   // the alert header will be hidden and the save changes button will be disabled
   // again.  For this, we need the @ViewChild decorator
   @ViewChild('editForm') editForm: NgForm;
 
-  user: User;
+  // The prevent-unsaved-changes.guard.ts prevents the user from clicking other
+  // links within the page while there are still unsaved changes in the edit form.
+  // But, Angular does not have access 'outside' the route
+  // that is why user still will loose some changes if the user clicks the close
+  // button on the browser.  In this case, we need a HostListener.  This will prompt
+  // 'Leave site' in the browser if there are still unsaved changes in the edit form.
+  // We don't have any control in the pop-up and its text since it is browser-specific.
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any) {
+    if (this.editForm.dirty) {
+      $event.returnValue = true;
+    }
+  }  
 
   constructor(private route: ActivatedRoute, private alertify: AlertifyService) { }
 
