@@ -3,7 +3,9 @@ using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace DatingApp.API.Controllers
@@ -56,39 +58,36 @@ namespace DatingApp.API.Controllers
         }
 
         // PUT: api/Users/5
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutUser([FromRoute] int id, [FromBody] User user)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutUser([FromRoute] int id, 
+            [FromBody] UserForUpdateDto userForUpdateDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //    if (id != user.Id)
-        //    {
-        //        return BadRequest();
-        //    }
+            // The first thing that we want to do is to check the user that is
+            // attempting to update their profile matches the token that the
+            // service is receiving. On the AuthController at line #77, we are
+            // setting the ClaimTypes.NameIdentifier equal to the user identifier
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
 
-        //    _context.Entry(user).State = EntityState.Modified;
+            var userFromRepo = await _repo.GetUser(id);
 
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!UserExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+            // Get the information from the userForUpdateDto and map it to 
+            // the userFromRepo
+            _mapper.Map(userForUpdateDto, userFromRepo);
 
-        //    return NoContent();
-        //}
+            // If this is successful, then we will just return NoContent();
+            if (await _repo.SaveAll())
+                return NoContent();
+
+            throw new Exception($"Updating user {id} failed on saved.");
+        }
 
         //// POST: api/Users
         //[HttpPost]
