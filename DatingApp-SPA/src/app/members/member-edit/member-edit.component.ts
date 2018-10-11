@@ -3,6 +3,8 @@ import { User } from '../../_models/user';
 import { ActivatedRoute } from '@angular/router';
 import { AlertifyService } from '../../_services/alertify.service';
 import { NgForm } from '@angular/forms';
+import { UserService } from '../../_services/user.service';
+import { AuthService } from '../../_services/auth.service';
 
 @Component({
   selector: 'app-member-edit',
@@ -33,7 +35,8 @@ export class MemberEditComponent implements OnInit {
     }
   }  
 
-  constructor(private route: ActivatedRoute, private alertify: AlertifyService) { }
+  constructor(private route: ActivatedRoute, private alertify: AlertifyService,
+    private userService: UserService, private authService: AuthService) { }
 
   ngOnInit() {
     // We are going to pass the data to the route and retrieve the data from the route
@@ -51,15 +54,21 @@ export class MemberEditComponent implements OnInit {
   }
 
   updateUser() {
-    console.log(this.user);
 
-    this.alertify.success('Profile updated successfully!');
+    // We are using the authService.decodedToken.nameid to pass the user id
+    this.userService.updateUser(this.authService.decodedToken.nameid, this.user)
+      .subscribe(() => {
+        this.alertify.success('Profile updated successfully!');
 
-    // Reset the form control.  This means by default, it is marked as pristine, marked as
-    // untouched and value is set to null.
-    // Add the this.user as the parameter so that it will reset the elements and fill
-    // the controls with the bindings coming from the this.user variable
-    this.editForm.reset(this.user);
+        // Reset the form control.  This means by default, it is marked as pristine, marked as
+        // untouched and value is set to null.
+        // Add the this.user as the parameter so that it will reset the elements and fill
+        // the controls with the bindings coming from the this.user variable
+        this.editForm.reset(this.user);
+      }, error => {
+        this.alertify.error(error);
+      });
+    
   }
 
 }
