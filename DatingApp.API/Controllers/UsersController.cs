@@ -45,14 +45,14 @@ namespace DatingApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await _repo.GetUser(id);
+            var userFromRepo = await _repo.GetUser(id);
 
-            if (user == null)
+            if (userFromRepo == null)
             {
                 return NotFound();
             }
 
-            var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+            var userToReturn = _mapper.Map<UserForDetailedDto>(userFromRepo);
 
             return Ok(userToReturn);
         }
