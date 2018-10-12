@@ -15,8 +15,8 @@ export class MemberEditComponent implements OnInit {
 
   user: User;
 
-  // We need to access the html form with id='editForm' since we need
-  // to reset its state once the save changes button is clicked so that
+  // We need to access template reference variable the html form with id='editForm'
+  // since we need to reset its state once the save changes button is clicked so that
   // the alert header will be hidden and the save changes button will be disabled
   // again.  For this, we need the @ViewChild decorator
   @ViewChild('editForm') editForm: NgForm;

@@ -50,6 +50,12 @@ namespace DatingApp.API
             // We will add a little bit loose cross-origin resource sharing policy to our API
             services.AddCors();
 
+            // We will be strongly-typing the CloudinarySettings found in appsettings.json
+            // We will be registering a confguration instance which will be bind against
+            // and in our case, we want to bind "CloudinarySettings" section from appsettings.json
+            // to the properties we defined in the class "CloudinarySettings"
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+
             // Register AuthRepository and make it available for dependency injection
             // throughout the app.  
             // AddSingleton -- which means we will create a single instance of our Repository 

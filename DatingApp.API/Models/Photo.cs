@@ -14,6 +14,12 @@ namespace DatingApp.API.Models
 
         public bool IsMain { get; set; }
 
+        /// <summary>
+        /// This will handle the PublicId response which is returned from 
+        /// Cloudinary
+        /// </summary>
+        public string PublicId { get; set; }
+
         // We need to add these properties so that EF will know that we want
         // a cascade delete rather than a restricted delete which means if the
         // user will be deleted, then photos associated with the user will also be deleted
