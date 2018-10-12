@@ -64,9 +64,11 @@ namespace DatingApp.API.Controllers
 
         // The int userId value will be coming from the route api/users/{userId}/photos
         // as specified in the Route attribute and not the usual api/photos/5 route
+        // We add the [FromForm] code to tell ASP.NET core that our payload is coming
+        // from a form in which it is how we used also in Postman
         [HttpPost]
         public async Task<IActionResult> AddPhotoForUser(int userId,
-            PhotoForCreationDto photoForCreationDto)
+            [FromForm]PhotoForCreationDto photoForCreationDto)
         {
             // The first thing that we want to do is to check the user that is
             // attempting to update their profile matches the token that the
