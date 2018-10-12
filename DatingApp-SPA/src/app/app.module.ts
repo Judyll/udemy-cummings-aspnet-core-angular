@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { BsDropdownModule, TabsModule } from 'ngx-bootstrap';
 import { RouterModule } from '@angular/router';
 import { NgxGalleryModule } from 'ngx-gallery';
+import { FileUploadModule } from 'ng2-file-upload';
 import { JwtModule } from '@auth0/angular-jwt';
 
 // Local components
@@ -68,6 +69,8 @@ export function tokenGetter() {
     RouterModule.forRoot(appRoutes),
     // Import the NGX Gallery for our image gallery
     NgxGalleryModule,
+    // Import the NG2 File Uploader
+    FileUploadModule,
     // Imports the JwtModule so that we can send the token automatically when
     // we will do an API request rather than creating headers manually as
     // example found in user.services.ts
