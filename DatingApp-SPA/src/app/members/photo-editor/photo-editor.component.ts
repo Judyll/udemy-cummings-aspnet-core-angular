@@ -50,5 +50,39 @@ export class PhotoEditorComponent implements OnInit {
       // Setting the max file size to 10MB
       maxFileSize: 10 * 1024 * 1024
     });
+
+    // Fix the ng2-file-uploader issue: Fail to load 'http://localhost:500/api/user/1/photos:
+    // Response to preflight request doesn't pass access control check: The value of the
+    // Access-Control-Allow-Origin header in the response must not be a the wildcard '*'
+    // when the request credential mode is 'include'.  Origin 'http://localhost:4200' is
+    // therefore not allowed access. The credentials mode of requests initiated by the XMLHttpRequest
+    // is controlled by the withCredentials attribute.
+    // We are going to extend our ng2-file-uploader that our file is not going with
+    // credentials
+    this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
+
+    // Once the file has been uploaded, this method will give us an option
+    // to do something.  And what we are going to do in this case is with the response we
+    // get back from our API, we can use the response:string parameter of the onSuccessItem
+    // method to get the photo properties like Id, Uri, etc so that we can display it
+    // directly to the browser once the upload is successful.
+    this.uploader.onSuccessItem = (item, response, status, headers) => {
+      if (response) {
+        const res: Photo = JSON.parse(response);
+
+        // Building up an photo object from the response
+        const photo = {
+          id: res.id,
+          url: res.url,
+          dateAdded: res.dateAdded,
+          description: res.description,
+          isMain: res.isMain
+        };
+
+        this.photos.push(photo);
+      }
+    };
+
   }
+
 }
