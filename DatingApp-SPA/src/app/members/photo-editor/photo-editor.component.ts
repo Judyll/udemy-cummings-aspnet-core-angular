@@ -24,6 +24,7 @@ export class PhotoEditorComponent implements OnInit {
   hasBaseDropZoneOver = false;
 
   baseUrl = environment.apiUrl;
+  currentMain: Photo;
 
   constructor(private authService: AuthService, private userService: UserService,
     private alertify: AlertifyService) { }
@@ -90,7 +91,15 @@ export class PhotoEditorComponent implements OnInit {
   setMainPhoto(photo: Photo) {
     this.userService.setMainPhoto(this.authService.decodedToken.nameid, photo.id)
       .subscribe(() => {
-        console.log('Successfully set to main');
+        // We need to find out which one is the current photo and set it to false
+        // and we will set the current photo selected to be the main photo. In that way
+        // we are going to instantly reflect what is going on when the user sets the
+        // main photo.
+        // We need to access the current main photo by using the array filter method
+        // to filter out photos and assign the main photo to the currentMain field
+        this.currentMain = this.photos.filter(f => f.isMain === true)[0];
+        this.currentMain.isMain = false;
+        photo.isMain = true;
       }, error => {
         this.alertify.error(error);
       })
