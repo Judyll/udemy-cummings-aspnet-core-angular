@@ -148,5 +148,54 @@ namespace DatingApp.API.Controllers
 
             return BadRequest("Could not add the photo");
         }
+
+        // Add a method to update the main photo.  Technically, we are updating a resource
+        // and in a RESTful API, when you are updating a resouce, typically that would be
+        // an HttpPut or HttpPatch.  But, for relatively simple changes like changing a
+        // property from false to true, it's not uncommon to see an API using an 
+        // HttpPost for such a simple change. And whilst in order to make the API completely 
+        // restful for we should abide by restful principles. We tend to take a more 
+        // pragmatic approach with an API so we sometimes prepared to sacrifice a little
+        // bit of restfulness just to have cleaner less unwieldy code for operations such 
+        // as this and it's probably more equivalent what we're doing now to some sort 
+        // of our RPC (Remote Procedure Call) call than an actual restful API.
+        // The below method this is going to take an I.D. and this will be the Id 
+        // of the photo and will add another part to this route and call it a setMain.
+        // And this is the path we use so in order to set the photo as main 
+        // we simply pass up an HttpPost requests simply to the below route
+        // and will send up an empty body and just use the Id to set the main 
+        // photo or to set the IS main property of the photo to true.
+
+        [HttpPost("{id}/setMain")]
+        public async Task<IActionResult> SetMainPhoto(int userId, int id)
+        {
+            // The first thing that we want to do is to check the user that is
+            // attempting to update their profile matches the token that the
+            // service is receiving. On the AuthController at line #77, we are
+            // setting the ClaimTypes.NameIdentifier equal to the user identifier
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var userFromRepo = await _repo.GetUser(userId);
+
+            if (!userFromRepo.Photos.Any(a => a.Id == id))
+                return Unauthorized();
+
+            var photoToChange = await _repo.GetPhoto(id);
+
+            if (photoToChange.IsMain)
+                return BadRequest("This is already the main photo.");
+
+            var currentMainPhoto = await _repo.GetMainPhotoForUser(userId);
+
+            currentMainPhoto.IsMain = false;
+
+            photoToChange.IsMain = true;
+
+            if (await _repo.SaveAll())
+                return NoContent();
+
+            return BadRequest("Could not set photo to main.");
+        }
     }
 }
