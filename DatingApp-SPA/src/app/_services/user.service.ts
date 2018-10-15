@@ -43,4 +43,11 @@ export class UserService {
     return this.http.put(this.baseUrl + 'users/' + id, user);
   }
 
+  setMainPhoto(userId: number, id: number) {
+    // Since this is a post request, we are required to send a body.
+    // We will be sending an empty object {}
+    return this.http.post(this.baseUrl + 'users/' + userId +
+      '/photos/' + id + '/setMain', {});
+  }
+
 }

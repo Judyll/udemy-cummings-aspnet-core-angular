@@ -3,6 +3,8 @@ import { FileUploader } from 'ng2-file-upload';
 import { Photo } from '../../_models/photo';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../_services/auth.service';
+import { UserService } from '../../_services/user.service';
+import { AlertifyService } from '../../_services/alertify.service';
 
 // This will be a child component of our member-edit.component.ts
 // And on of the things that we will be bringing in from our member-edit.component.ts
@@ -23,7 +25,8 @@ export class PhotoEditorComponent implements OnInit {
 
   baseUrl = environment.apiUrl;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private userService: UserService,
+    private alertify: AlertifyService) { }
 
   ngOnInit() {
     this.initializeUploader();
@@ -82,7 +85,15 @@ export class PhotoEditorComponent implements OnInit {
         this.photos.push(photo);
       }
     };
+  }
 
+  setMainPhoto(photo: Photo) {
+    this.userService.setMainPhoto(this.authService.decodedToken.nameid, photo.id)
+      .subscribe(() => {
+        console.log('Successfully set to main');
+      }, error => {
+        this.alertify.error(error);
+      })
   }
 
 }
