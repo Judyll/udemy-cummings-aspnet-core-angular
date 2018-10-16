@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 import { Photo } from '../../_models/photo';
 import { environment } from '../../../environments/environment';
@@ -18,6 +18,10 @@ export class PhotoEditorComponent implements OnInit {
 
   // We will bring the user.photos[] from our parent member-edit.component.ts
   @Input() photos: Photo[];
+
+  // We will update our parent member-edit.component.ts with changes from this
+  // child component
+  @Output() getMemberPhotoChange = new EventEmitter<string>();
 
   // Copied from https://valor-software.com/ng2-file-upload/
   uploader: FileUploader;
@@ -100,6 +104,9 @@ export class PhotoEditorComponent implements OnInit {
         this.currentMain = this.photos.filter(f => f.isMain === true)[0];
         this.currentMain.isMain = false;
         photo.isMain = true;
+
+        // We will then emit the photo URL to be consumed by the parent member-edit.component.ts
+        this.getMemberPhotoChange.emit(photo.url);
       }, error => {
         this.alertify.error(error);
       })

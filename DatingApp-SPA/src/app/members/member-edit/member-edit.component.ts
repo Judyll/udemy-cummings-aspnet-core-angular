@@ -67,8 +67,14 @@ export class MemberEditComponent implements OnInit {
         this.editForm.reset(this.user);
       }, error => {
         this.alertify.error(error);
-      });
-    
+      });    
+  }
+
+  // This method handles the 'getMemberPhotoChange' event which is emitted from the child
+  // component photo-editor.component.ts define in the template member-edit.component.html
+  // as (getMemberPhotoChange)="updateMainPhoto($event)"
+  updateMainPhoto(photoUrl) {
+    this.user.photoUrl = photoUrl;
   }
 
 }
