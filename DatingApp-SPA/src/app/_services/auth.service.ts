@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from '../../environments/environment';
+import { User } from '../_models/user';
 
 // This allows us to make the service injectible.  Components does not need this decorator
 // since components are automatically injectible.
@@ -19,6 +20,7 @@ export class AuthService {
 
   jwtHelper = new JwtHelperService();
   decodedToken: any;
+  currentUser: User;
 
   constructor(private http: HttpClient) { }
 
@@ -56,11 +58,18 @@ export class AuthService {
         // We will pass in the response
         map((response: any) => {
           // This will contain the token response
-          const user = response;
+          const responseUser = response;
 
-          if (user) {
-            localStorage.setItem('token', user.token);
-            this.decodedToken = this.jwtHelper.decodeToken(user.token);
+          if (responseUser) {
+            localStorage.setItem('token', responseUser.token);
+
+            // The .setItem second parameter accepts a string and what we are getting
+            // back from our API server is an object.  So, we will use JSON.stringify
+            // to convert the string into an object
+            localStorage.setItem('user', JSON.stringify(responseUser.user));
+            this.decodedToken = this.jwtHelper.decodeToken(responseUser.token);
+            this.currentUser = responseUser.user;
+
             console.log(this.decodedToken);
           }
         })

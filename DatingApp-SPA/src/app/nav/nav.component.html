@@ -27,7 +27,10 @@
       directive from ngx-boostrap package
   -->
     <div *ngIf="loggedIn()" class="dropdown" dropdown>
-      <a class="dropdown-toggle text-light" style="cursor: pointer"
+      <span class="mr-1">
+        <img src="{{authService.currentUser.photoUrl}}" />
+      </span>
+      <a class="dropdown-toggle text-light"
          dropdownToggle (click)="false">
         <!--Add a pipe titlecase which converts the output into title case-->
         Welcome {{authService.decodedToken?.unique_name | titlecase}}
@@ -39,7 +42,7 @@
         </a>
         <div class="dropdown-divider"></div>
         <!--If we remove the href="", the cursor will be change as text cursor instead of pointer-->
-        <a class="dropdown-item" style="cursor: pointer" (click)="logOut()">
+        <a class="dropdown-item" (click)="logOut()">
           <i class="fa fa-sign-out"></i> Logout
         </a>
       </div>

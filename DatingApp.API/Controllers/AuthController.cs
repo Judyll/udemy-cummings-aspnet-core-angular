@@ -1,4 +1,5 @@
-﻿using DatingApp.API.Data;
+﻿using AutoMapper;
+using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -18,11 +19,14 @@ namespace DatingApp.API.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IAuthRepository _repo;
+        private readonly IMapper _mapper;
 
-        public AuthController(IConfiguration config, IAuthRepository repo)
+        public AuthController(IConfiguration config, IAuthRepository repo,
+            IMapper mapper)
         {
             _config = config;
             _repo = repo;
+            _mapper = mapper;
         }
 
         // Parameters that we send up from our methods via Http, ASP.NET Core MVC will automatically try to
@@ -102,9 +106,19 @@ namespace DatingApp.API.Controllers
 
                 var token = tokenHandler.CreateToken(tokenDescriptor);
 
+                // We will be using this 'user' object to be return back as an
+                // anonymous object to the calling domain.  This is useful like having 
+                // a user photo beside the user name
+                // in the navigation bar once the user has successfully log-in
+                // We are setting the mapping profile for the UserForListDto
+                // in the AutoMapperProfiles class so that the main photo url
+                // will automatically be mapped.
+                var user = _mapper.Map<UserForListDto>(userFromRepo);
+
                 return Ok(new
                 {
-                    token = tokenHandler.WriteToken(token)
+                    token = tokenHandler.WriteToken(token),
+                    user
                 });
             }
 
