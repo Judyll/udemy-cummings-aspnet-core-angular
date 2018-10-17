@@ -1,5 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+// We can use this for any-to-any component communication through the use of the Services.
+// BehaviorSubject
+// * Is a type of subject (which is a type of Observable)
+// * Can be subscribed to
+// * Subscribers can receive updated results
+// * A subject is an observer (so we can send values to it)
+// * Needs an initial value (must always return a value on subscription)
+// * On subscription returns last value of subject
+// * Can use the getValue() method in no observable code
+import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from '../../environments/environment';
@@ -22,7 +32,24 @@ export class AuthService {
   decodedToken: any;
   currentUser: User;
 
+  photoUrl = new BehaviorSubject<string>('../../assets/user.png');
+  // Making the this.currentPhotoUrl property 'asObservable' mean we are able to subscribe
+  // to this.currentPhotoUrl property and if this is updated, then ANY components
+  // subscribing to it gets updated too.  This is even if the application is refreshed,
+  // we log-in, we log-out, anything we do on any occasion the
+  // this.changeMemberPhoto(photoUrl: string)
+  // is going to be called, our photo url will be updated everywhere or any component
+  // that is subscribing to the this.currentPhotoUrl observable.
+  currentPhotoUrl = this.photoUrl.asObservable();
+
   constructor(private http: HttpClient) { }
+
+  // This method will update the 'this.photoUrl' behavior subject
+  changeMemberPhoto(photoUrl: string) {
+    // This will update the value of the this.photoUrl instead of
+    // the default which is '../../assets/user.png'
+    this.photoUrl.next(photoUrl);
+  }
 
   // This will take the model parameter that we have specified in the nav.component.ts
   login(model: any) {
@@ -69,8 +96,7 @@ export class AuthService {
             localStorage.setItem('user', JSON.stringify(responseUser.user));
             this.decodedToken = this.jwtHelper.decodeToken(responseUser.token);
             this.currentUser = responseUser.user;
-
-            console.log(this.decodedToken);
+            this.changeMemberPhoto(this.currentUser.photoUrl);
           }
         })
       );

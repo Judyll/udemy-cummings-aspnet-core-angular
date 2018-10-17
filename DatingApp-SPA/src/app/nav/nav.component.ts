@@ -12,11 +12,20 @@ import { Router } from '@angular/router';
 export class NavComponent implements OnInit {
 
   model: any = {};
+  photoUrl: string;
 
   constructor(private authService: AuthService,
     private alertify: AlertifyService, private router: Router) { }
 
   ngOnInit() {
+    // We will subscribe to the 'currentPhotoUrl' observable so that we can
+    // set the user photo in the nav bar every time other components like
+    // the photo-editor.component.ts changes the user main
+    // photo.  Remember, this nav.component.ts is not a parent/child component of
+    // the photo-editor.component.ts
+    this.authService.currentPhotoUrl.subscribe(returnUrl => {
+      this.photoUrl = returnUrl;
+    })
   }
 
   login() {

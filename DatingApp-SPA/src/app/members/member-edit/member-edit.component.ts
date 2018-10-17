@@ -14,6 +14,7 @@ import { AuthService } from '../../_services/auth.service';
 export class MemberEditComponent implements OnInit {
 
   user: User;
+  photoUrl: string;
 
   // We need to access template reference variable the html form with id='editForm'
   // since we need to reset its state once the save changes button is clicked so that
@@ -51,6 +52,15 @@ export class MemberEditComponent implements OnInit {
     this.route.data.subscribe(success => {
       this.user = success['user'];
     });
+
+    // We will subscribe to the 'currentPhotoUrl' observable so that we can
+    // set the user photo in the nav bar every time other components like
+    // the photo-editor.component.ts changes the user main
+    // photo.  Remember, this nav.component.ts is not a parent/child component of
+    // the photo-editor.component.ts
+    this.authService.currentPhotoUrl.subscribe(returnUrl => {
+      this.photoUrl = returnUrl;
+    });
   }
 
   updateUser() {
@@ -75,6 +85,7 @@ export class MemberEditComponent implements OnInit {
   // as (getMemberPhotoChange)="updateMainPhoto($event)"
   updateMainPhoto(photoUrl) {
     this.user.photoUrl = photoUrl;
+    this.authService.changeMemberPhoto(photoUrl);
   }
 
 }

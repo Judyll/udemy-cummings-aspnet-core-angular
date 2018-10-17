@@ -106,7 +106,16 @@ export class PhotoEditorComponent implements OnInit {
         photo.isMain = true;
 
         // We will then emit the photo URL to be consumed by the parent member-edit.component.ts
+        // or we can also say this.authService.changeMemberPhoto(photo.url) although I placed
+        // this on member-edit.component.ts -> updateMainPhoto(photoUrl)
         this.getMemberPhotoChange.emit(photo.url);
+
+        // We will save the new photo url in the local storage so that the same main
+        // photo will be shown even when the user refreshes the page, we are finishing
+        // the 'user' information in the local storage in the app.component.ts -> ngOnInit()
+        this.authService.currentUser.photoUrl = photo.url;
+        localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
+
       }, error => {
         this.alertify.error(error);
       })
