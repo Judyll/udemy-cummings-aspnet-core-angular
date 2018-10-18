@@ -24,19 +24,13 @@
       -->
       <div class="col-4">
         <!--
-            This will demonstrate a parent to child component communication using input properties
-            We are getting 'values' from the API in this home.component.ts.  Now, we want to pass it to
-            register.component.ts so that it can be used in the dropdown for the username field in the
-            the registration form.
-            The [valuesFromHome] is the input property.
-
-            This will also demonstrate a child to parent component communication using output properties
+            This will demonstrate a child to parent component communication using output properties
             by emitting an output from our child component register.component which will be then received by our
             parent component home.component.  The (cancelRegister) is an event method in our child component
             register.component which emits a boolean value and the setRegisterMode($event) is an method in our
             parent component home.component which accepts boolean as a parameter.
         -->
-        <app-register [valuesFromHome]="values" (cancelRegister)="setRegisterMode($event)"></app-register>
+        <app-register (cancelRegister)="setRegisterMode($event)"></app-register>
       </div>
     </div>
   </div>

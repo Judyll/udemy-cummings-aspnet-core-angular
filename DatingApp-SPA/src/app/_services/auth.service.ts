@@ -48,7 +48,8 @@ export class AuthService {
   changeMemberPhoto(photoUrl: string) {
     // This will update the value of the this.photoUrl instead of
     // the default which is '../../assets/user.png'
-    this.photoUrl.next(photoUrl);
+    if (photoUrl)
+      this.photoUrl.next(photoUrl);
   }
 
   // This will take the model parameter that we have specified in the nav.component.ts
@@ -95,8 +96,8 @@ export class AuthService {
             // to convert the string into an object
             localStorage.setItem('user', JSON.stringify(responseUser.user));
             this.decodedToken = this.jwtHelper.decodeToken(responseUser.token);
-            this.currentUser = responseUser.user;
-            this.changeMemberPhoto(this.currentUser.photoUrl);
+            this.currentUser = responseUser.user;            
+            this.changeMemberPhoto(this.currentUser.photoUrl);              
           }
         })
       );

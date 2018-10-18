@@ -9,9 +9,6 @@ import { AlertifyService } from '../_services/alertify.service';
 })
 export class RegisterComponent implements OnInit {
 
-  // This will allow input from parent component
-  @Input() valuesFromHome: any;
-
   // This will allow output from this component which is an emit event
   // and make sure EventEmitter is from @angular/core
   @Output() cancelRegister = new EventEmitter();
