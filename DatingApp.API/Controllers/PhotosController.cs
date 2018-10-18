@@ -197,5 +197,47 @@ namespace DatingApp.API.Controllers
 
             return BadRequest("Could not set photo to main.");
         }
+
+        // int userId -- will be coming from the route
+        // int id -- the id of the Photo
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePhoto(int userId, int id)
+        {
+            // The first thing that we want to do is to check the user that is
+            // attempting to update their profile matches the token that the
+            // service is receiving. On the AuthController at line #77, we are
+            // setting the ClaimTypes.NameIdentifier equal to the user identifier
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var userFromRepo = await _repo.GetUser(userId);
+
+            if (!userFromRepo.Photos.Any(a => a.Id == id))
+                return Unauthorized();
+
+            var photoToDelete = await _repo.GetPhoto(id);
+
+            if (photoToDelete.IsMain)
+                return BadRequest("You cannot delete your main photo.");
+
+            if (!string.IsNullOrWhiteSpace(photoToDelete.PublicId))
+            {
+                var result = _cloudinary.Destroy(new DeletionParams(photoToDelete.PublicId));
+
+                if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    _repo.Delete(photoToDelete);
+                }
+            }
+            else
+            {
+                _repo.Delete(photoToDelete);
+            }            
+
+            if (await _repo.SaveAll())
+                return Ok();
+
+            return BadRequest("Failed to delete the photo.");
+        }
     }
 }

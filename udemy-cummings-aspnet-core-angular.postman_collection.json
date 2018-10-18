@@ -9,7 +9,12 @@
 			"name": "GetValues()",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJqb2huIiwibmJmIjoxNTM3OTUzMDQ1LCJleHAiOjE1MzgwMzk0NDUsImlhdCI6MTUzNzk1MzA0NX0.eWUXBBH2oRIfPCWjayLMT0KtG1lInAoFvOvO35h8QHzbkxHIsHjiACLmWAThHb-MnMkqzMj7cmuF47ugRQftvQ"
+					}
+				],
 				"body": {},
 				"url": {
 					"raw": "http://localhost:5000/api/values",
@@ -90,7 +95,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"Username\": \"\",\n\t\"Password\": \"\"\n}"
+					"raw": "{\n\t\"Username\": \"susan\",\n\t\"Password\": \"password\"\n}"
 				},
 				"url": {
 					"raw": "http://localhost:5000/api/auth/login",
@@ -103,6 +108,202 @@
 						"api",
 						"auth",
 						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUsers()",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJzdXNhbiIsIm5iZiI6MTUzOTIxNDQ0NCwiZXhwIjoxNTM5MzAwODQ0LCJpYXQiOjE1MzkyMTQ0NDR9.byxXLjDo51XkY5pagvZhP61Wt4V2txso99INbcorC_jQSBXThiyFFzFnLfjuy46bw7bFgjFOfEa2hCCo1I0v6A"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:5000/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUser([FromRoute] int id)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJzdXNhbiIsIm5iZiI6MTUzOTgyMzYwMiwiZXhwIjoxNTM5OTEwMDAyLCJpYXQiOjE1Mzk4MjM2MDJ9.RIKxKpGf7Q862v_HX31l0dpvOo5IGBTwG-NSmFf9vrHzq6Wvp6CfQ7sfMUVGT5swrZZyVSrEO_IjIyDQn1uSDQ"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:5000/api/users/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PutUser([FromRoute] int id, [FromBody] UserForUpdateDto userForUpdateDto)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJzdXNhbiIsIm5iZiI6MTUzOTIxNDQ0NCwiZXhwIjoxNTM5MzAwODQ0LCJpYXQiOjE1MzkyMTQ0NDR9.byxXLjDo51XkY5pagvZhP61Wt4V2txso99INbcorC_jQSBXThiyFFzFnLfjuy46bw7bFgjFOfEa2hCCo1I0v6A"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Introduction\": \"Introduction Test\",\n\t\"LookingFor\": \"LookingFor Test\",\n\t\"Interest\": \"Interest Test\",\n\t\"City\": \"City Test\",\n\t\"Country\": \"Country Test\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users/99",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"99"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddPhotoForUser(int userId, PhotoForCreationDto photoForCreationDto)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJzdXNhbiIsIm5iZiI6MTUzOTMyNzUyNiwiZXhwIjoxNTM5NDEzOTI2LCJpYXQiOjE1MzkzMjc1MjZ9.Gk0SVZiyEctl2aZFHfKgkaEgQWYt9TvGAAt3KGI2hEE_cQGxXIHG1bNCHfhEh_becDIJxsTrk4YXifc0Aci1gg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "File",
+							"description": "'File' is the property name that we have created for the 'PhotoForCreationDto'. ",
+							"type": "file",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users/2/photos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"2",
+						"photos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SetMainPhoto(int userId, int id)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJzdXNhbiIsIm5iZiI6MTUzOTU3MDAyOSwiZXhwIjoxNTM5NjU2NDI5LCJpYXQiOjE1Mzk1NzAwMjl9.Zhcsm9YiSzF4FoOtIXt0oRMRe58DWJZQADHMQJ3GxA0mEJDE7kN7lNYhIibo7f6HFHM44xsjfFRy4Mf9cMgDIA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users/2/photos/13/setMain",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"2",
+						"photos",
+						"13",
+						"setMain"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeletePhoto(int userId, int id)",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJzdXNhbiIsIm5iZiI6MTUzOTgyMzYwMiwiZXhwIjoxNTM5OTEwMDAyLCJpYXQiOjE1Mzk4MjM2MDJ9.RIKxKpGf7Q862v_HX31l0dpvOo5IGBTwG-NSmFf9vrHzq6Wvp6CfQ7sfMUVGT5swrZZyVSrEO_IjIyDQn1uSDQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users/2/photos/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"2",
+						"photos",
+						"2"
 					]
 				}
 			},
