@@ -121,4 +121,20 @@ export class PhotoEditorComponent implements OnInit {
       })
   }
 
+  deletePhoto(id: number) {
+    // The second parameter of the this.alertify.confirm method is an 'OK' callback
+    this.alertify.confirm('Are you sure you want to delete this photo?', () => {
+      this.userService.deletePhoto(this.authService.decodedToken.nameid, id)
+        .subscribe(() => {
+          // We will now remove the delete photo from our photos array
+          // First we need to find the index of the photo we are deleting and then
+          // next is indicate how many are we deleting
+          this.photos.splice(this.photos.findIndex(f => f.id === id), 1);
+          this.alertify.success('Photo has been successfully deleted.');
+        }, () => {
+          this.alertify.error('Failed to delete the photo.');
+        });
+    });
+  }
+
 }
