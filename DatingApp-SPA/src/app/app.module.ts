@@ -2,7 +2,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule, TabsModule } from 'ngx-bootstrap';
 import { RouterModule } from '@angular/router';
 import { NgxGalleryModule } from 'ngx-gallery';
@@ -64,6 +64,9 @@ export function tokenGetter() {
     HttpClientModule,
     // We need to tell Angular we will be using the Forms module which is used for submitting username and password
     FormsModule,
+    // We need to import the reactive forms module so that we can use reactive forms
+    // in our register.component.ts
+    ReactiveFormsModule,
     BsDropdownModule.forRoot(),
     // Add a router to our SPA which is defined in the routes.ts
     RouterModule.forRoot(appRoutes),

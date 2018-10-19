@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -15,25 +16,37 @@ export class RegisterComponent implements OnInit {
 
   model: any = {};
 
+  // Tracks the value and validity state of a group of FormControl instances.
+  registerForm: FormGroup;
+
   constructor(private authService: AuthService,
     private alertify: AlertifyService) { }
 
   ngOnInit() {
+
+    // Create the register form in the ngOnInit() life cycle
+    this.registerForm = new FormGroup({
+      username: new FormControl(),
+      password: new FormControl(),
+      confirmPassword: new FormControl()
+    });
   }
 
   register() {
 
-    // For the 'success' and 'error' parameter, we will just use empty () since we are not using anything
-    // from this response
-    this.authService.register(this.model).subscribe(() => {
-      this.alertify.success('Registration successful');
-    }, error => {
-      // This will be the http response that we will get back from the server
-      // Typical error configured is a Bad Request that we set in \DatingApp.API\Controllers\AuthController.cs
-      // RegisterNewUser method or model state validations (required, string length) that we
-      // set on \DatingApp.API\Dtos\UserForRegisterDto.cs
-      this.alertify.error(error);
-    });
+    //// For the 'success' and 'error' parameter, we will just use empty () since we are not using anything
+    //// from this response
+    //this.authService.register(this.model).subscribe(() => {
+    //  this.alertify.success('Registration successful');
+    //}, error => {
+    //  // This will be the http response that we will get back from the server
+    //  // Typical error configured is a Bad Request that we set in \DatingApp.API\Controllers\AuthController.cs
+    //  // RegisterNewUser method or model state validations (required, string length) that we
+    //  // set on \DatingApp.API\Dtos\UserForRegisterDto.cs
+    //  this.alertify.error(error);
+    //});
+
+    console.log(this.registerForm.value);
   }
 
   cancel() {

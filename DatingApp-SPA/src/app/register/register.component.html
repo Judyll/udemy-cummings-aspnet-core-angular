@@ -1,21 +1,49 @@
 <!--
-    Make our form an Angular form  
+    In our nav.component.html, we are using template reference variable.
+    For our register.component.html, we will be using reactive forms by
+    specifying [formGroup]="registerForm" where "registerForm" is the property
+    we have created in register.component.ts
 -->
-<form #registerForm="ngForm" (ngSubmit)="register()">
+<form [formGroup]="registerForm" (ngSubmit)="register()">
   <h2 class="text-center text-primary">Sign Up</h2>
   <hr>
   <div class="form-group">
-    <input type="text" class="form-control" required
-           name="input-username" placeholder="Username" [(ngModel)]="model.username">
+    <!--
+    We will remove the 'required' attribute on this element since we will deal with
+    the validation in the component rather than on the template.
+
+    We will also remove the two-way binding [(ngModel)]="model.username".
+
+    Instead of name="input-username", we will now use formControlName="username" and this
+        should match the name we added in
+
+        this.registerForm = new FormGroup({
+          username: new FormControl(),
+          password: new FormControl(),
+          confirmPassword: new FormControl()
+        });
+  -->
+    <input type="text" class="form-control"
+           formControlName="username" placeholder="Username">
   </div>
 
   <div class="form-group">
-    <input type="password" class="form-control" required
-           name="input-password" placeholder="Password" [(ngModel)]="model.password">
+    <input type="password" class="form-control" 
+           formControlName="password" placeholder="Password">
   </div>
+
+  <div class="form-group">
+    <input type="password" class="form-control"
+           formControlName="confirmPassword" placeholder="Confirm Password"/>
+  </div>
+
   <div class="form-group text-center">
     <button class="btn btn-success mr-2" type="submit">Register</button>
     <button class="btn btn-default" type="button" (click)="cancel()">Cancel</button>
   </div>
 
 </form>
+
+<!--Temporary for just debugging-->
+<p>Form value: {{registerForm.value | json}}</p>
+<p>Form status: {{registerForm.status | json}}</p>
