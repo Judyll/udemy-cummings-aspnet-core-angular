@@ -27,7 +27,7 @@ export class RegisterComponent implements OnInit {
     // Create the register form in the ngOnInit() life cycle
     // which takes form controls and out-of-the-box validators as well
     this.registerForm = new FormGroup({
-      username: new FormControl('Hello', Validators.required),
+      username: new FormControl('', Validators.required),
       password: new FormControl('', [Validators.required, Validators.minLength(4),
       Validators.maxLength(8)]),
       confirmPassword: new FormControl('', Validators.required)
