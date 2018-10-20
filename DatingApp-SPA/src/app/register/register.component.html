@@ -64,10 +64,20 @@
     <div class="invalid-feedback" *ngIf="registerForm.get('knownAs').touched && registerForm.get('knownAs').hasError('required')">Known as is required</div>
   </div>
 
-  <!--Date of Birth-->
+  <!--
+      Date of Birth
+      We are now using NGX Bootstrap datepicker for this control that is why we need
+      to change the type="text" attribute and add the bsDatepicker directive
+  -->
   <div class="form-group">
-    <input [ngClass]="{'is-invalid': registerForm.get('dateOfBirth').errors && registerForm.get('dateOfBirth').touched}" class="form-control"
-           placeholder="Date of Birth" formControlName="dateOfBirth" type="date">
+    <input [ngClass]="{'is-invalid': registerForm.get('dateOfBirth').errors
+           && registerForm.get('dateOfBirth').touched}"
+           class="form-control"
+           placeholder="Date of Birth"
+           formControlName="dateOfBirth"
+           type="text"
+           bsDatepicker
+           [bsConfig]="bsConfig">
     <div class="invalid-feedback" *ngIf="registerForm.get('dateOfBirth').touched && registerForm.get('dateOfBirth').hasError('required')">Date of Birth is required</div>
   </div>
 

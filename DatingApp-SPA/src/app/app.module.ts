@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BsDropdownModule, TabsModule } from 'ngx-bootstrap';
+import { BsDropdownModule, TabsModule, BsDatepickerModule } from 'ngx-bootstrap';
 import { RouterModule } from '@angular/router';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -67,12 +67,15 @@ export function tokenGetter() {
     // We need to import the reactive forms module so that we can use reactive forms
     // in our register.component.ts
     ReactiveFormsModule,
+    // Add the NGX dropdown module - https://valor-software.com/ngx-bootstrap/#/dropdowns
     BsDropdownModule.forRoot(),
+    // Add the NGX datepicker module - https://valor-software.com/ngx-bootstrap/#/datepicker
+    BsDatepickerModule.forRoot(),
     // Add a router to our SPA which is defined in the routes.ts
     RouterModule.forRoot(appRoutes),
-    // Import the NGX Gallery for our image gallery
+    // Import the NGX Gallery for our image gallery - https://lukasz-galka.github.io/ngx-gallery-demo/
     NgxGalleryModule,
-    // Import the NG2 File Uploader
+    // Import the NG2 File Uploader - https://valor-software.com/ng2-file-upload/
     FileUploadModule,
     // Imports the JwtModule so that we can send the token automatically when
     // we will do an API request rather than creating headers manually as

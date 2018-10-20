@@ -2,6 +2,7 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { BsDatepickerConfig } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-register',
@@ -19,10 +20,21 @@ export class RegisterComponent implements OnInit {
   // Tracks the value and validity state of a group of FormControl instances.
   registerForm: FormGroup;
 
+  // Used for the NGX Boostrap datepicker configuration to add styling
+  // We only need to set the theme using the 'containerClass' property but there are
+  // other properties in the BsDatepickerConfig class that are not optional.
+  // To go around with this, then we need to declare 'bsConfig' as 'Partial' class
+  // which means we only need to implement parts of the BsDatepickerConfig class
+  bsConfig: Partial<BsDatepickerConfig>;
+
   constructor(private authService: AuthService,
     private alertify: AlertifyService, private fb: FormBuilder) { }
 
   ngOnInit() {
+
+    this.bsConfig = {
+      containerClass: 'theme-red'
+    };
 
     // Create the register form in the ngOnInit() life cycle
     // which takes form controls and out-of-the-box validators as well
