@@ -7,36 +7,49 @@
 <form [formGroup]="registerForm" (ngSubmit)="register()">
   <h2 class="text-center text-primary">Sign Up</h2>
   <hr>
+
+  <!--Gender-->
+  <div class="form-group">
+    <label class="control-label" style="margin-right:10px">I am a: </label>
+    <label class="radio-inline">
+      <input class="mr-3" type="radio" value="male" formControlName="gender">Male
+    </label>
+    <label class="radio-inline ml-3">
+      <input class="mr-3" type="radio" value="female" formControlName="gender">Female
+    </label>
+  </div>
+
+  <!--Username-->
   <div class="form-group">
     <!--
-    We will remove the 'required' attribute on this element since we will deal with
-    the validation in the component rather than on the template.
+      We will remove the 'required' attribute on this element since we will deal with
+      the validation in the component rather than on the template.
 
-    We will also remove the two-way binding [(ngModel)]="model.username".
+      We will also remove the two-way binding [(ngModel)]="model.username".
 
-    Instead of name="input-username", we will now use formControlName="username" and this
-        should match the name we added in
+      Instead of name="input-username", we will now use formControlName="username" and this
+          should match the name we added in
 
-        this.registerForm = new FormGroup({
-          username: new FormControl(),
-          password: new FormControl(),
-          confirmPassword: new FormControl()
-        });
+          this.registerForm = new FormGroup({
+            username: new FormControl(),
+            password: new FormControl(),
+            confirmPassword: new FormControl()
+          });
 
-    We are also adding validation feedback to our user by using Boostrap classes and
-        conditionals to display validational errors to the users.  We are adding [ngClass]
-        which allows us to provide an expression so that we can use wether or not
-        we will be displaying the bootstrap 'is-invalid' class. We are using the
-        registerForm.get('username').errors property which means we will only be
-        showing the 'is-invalid' class if the 'username' control is on error state
-        based on the Validators we have provided in the register.component.ts.  And
-        then we used the registerForm.get('username').touched property so that we will
-        only show the 'is-invalid' class if the control is touched.
+      We are also adding validation feedback to our user by using Boostrap classes and
+          conditionals to display validational errors to the users.  We are adding [ngClass]
+          which allows us to provide an expression so that we can use wether or not
+          we will be displaying the bootstrap 'is-invalid' class. We are using the
+          registerForm.get('username').errors property which means we will only be
+          showing the 'is-invalid' class if the 'username' control is on error state
+          based on the Validators we have provided in the register.component.ts.  And
+          then we used the registerForm.get('username').touched property so that we will
+          only show the 'is-invalid' class if the control is touched.
 
-        Noticed that we did not provide any other logic in the <div class="invalid-feedback">
-        because the class 'invalid-feedback' will only show if the 'is-invalid' class is
-        also applied to our <input> element     
-  -->
+          Noticed that we did not provide any other logic in the <div class="invalid-feedback">
+          because the class 'invalid-feedback' will only show if the 'is-invalid' class is
+          also applied to our <input> element
+    -->
     <input type="text" class="form-control"
            [ngClass]="{'is-invalid': registerForm.get('username').errors
            && registerForm.get('username').touched}"
@@ -44,21 +57,50 @@
     <div class="invalid-feedback">Please choose a username</div>
   </div>
 
+  <!--Known As-->
+  <div class="form-group">
+    <input [ngClass]="{'is-invalid': registerForm.get('knownAs').errors && registerForm.get('knownAs').touched}" class="form-control"
+           placeholder="Known as" formControlName="knownAs">
+    <div class="invalid-feedback" *ngIf="registerForm.get('knownAs').touched && registerForm.get('knownAs').hasError('required')">Known as is required</div>
+  </div>
+
+  <!--Date of Birth-->
+  <div class="form-group">
+    <input [ngClass]="{'is-invalid': registerForm.get('dateOfBirth').errors && registerForm.get('dateOfBirth').touched}" class="form-control"
+           placeholder="Date of Birth" formControlName="dateOfBirth" type="date">
+    <div class="invalid-feedback" *ngIf="registerForm.get('dateOfBirth').touched && registerForm.get('dateOfBirth').hasError('required')">Date of Birth is required</div>
+  </div>
+
+  <!--City-->
+  <div class="form-group">
+    <input [ngClass]="{'is-invalid': registerForm.get('city').errors && registerForm.get('city').touched}" class="form-control"
+           placeholder="City" formControlName="city">
+    <div class="invalid-feedback" *ngIf="registerForm.get('city').touched && registerForm.get('city').hasError('required')">City is required</div>
+  </div>
+
+  <!--Country-->
+  <div class="form-group">
+    <input [ngClass]="{'is-invalid': registerForm.get('country').errors && registerForm.get('country').touched}" class="form-control"
+           placeholder="Country" formControlName="country">
+    <div class="invalid-feedback" *ngIf="registerForm.get('country').touched && registerForm.get('country').hasError('required')">Country is required</div>
+  </div>
+
+  <!--Password-->
   <div class="form-group">
     <input type="password" class="form-control"
            [ngClass]="{'is-invalid': registerForm.get('password').errors
            && registerForm.get('password').touched}"
            formControlName="password" placeholder="Password">
     <!--
-    We are now using *ngIf do filter what error message are we showing when the
-      'is-valid' class is added in our <input> element.  We are using the
-      registerForm.get('password').hasError('required') property where the 'required'
-        is the the Validators.required we have specified in the register.component.ts
+      We are now using *ngIf do filter what error message are we showing when the
+        'is-valid' class is added in our <input> element.  We are using the
+        registerForm.get('password').hasError('required') property where the 'required'
+          is the the Validators.required we have specified in the register.component.ts
 
-        For the minimum length, we need to use *ngIf="registerForm.get('password').hasError('minlength')
-        property and noticed we need to use lower-case 'minlegth' even though we are using
-        camel-cased Validators.minLength(4) in our register.component.ts
-  -->
+          For the minimum length, we need to use *ngIf="registerForm.get('password').hasError('minlength')
+          property and noticed we need to use lower-case 'minlegth' even though we are using
+          camel-cased Validators.minLength(4) in our register.component.ts
+    -->
     <div class="invalid-feedback"
          *ngIf="registerForm.get('password').hasError('required')
          && registerForm.get('password').touched">
@@ -76,13 +118,14 @@
     </div>
   </div>
 
+  <!--Confirm Password-->
   <div class="form-group">
     <!--
-      By using the registerForm.hasError('mismatch') property, we are now checking
-        if the registerForm form group is throwing the error 'mismatch' which matches
-        the key/value that we have specified in the custom validator
-        passwordMatchValidator(g: FormGroup) in the register.component.ts
-  -->
+        By using the registerForm.hasError('mismatch') property, we are now checking
+          if the registerForm form group is throwing the error 'mismatch' which matches
+          the key/value that we have specified in the custom validator
+          passwordMatchValidator(g: FormGroup) in the register.component.ts
+    -->
     <input type="password" class="form-control"
            [ngClass]="{'is-invalid': registerForm.get('confirmPassword').errors
            && registerForm.get('confirmPassword').touched
@@ -96,12 +139,14 @@
   </div>
 
   <div class="form-group text-center">
-    <button class="btn btn-success mr-2" type="submit">Register</button>
+    <button class="btn btn-success mr-2" [disabled]="!registerForm.valid" type="submit">Register</button>
     <button class="btn btn-default" type="button" (click)="cancel()">Cancel</button>
   </div>
 
 </form>
 
 <!--Temporary for just debugging-->
+<!--
 <p>Form value: {{registerForm.value | json}}</p>
 <p>Form status: {{registerForm.status | json}}</p>
+-->
