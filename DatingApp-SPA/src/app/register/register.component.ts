@@ -3,6 +3,8 @@ import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap';
+import { User } from '../_models/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +17,9 @@ export class RegisterComponent implements OnInit {
   // and make sure EventEmitter is from @angular/core
   @Output() cancelRegister = new EventEmitter();
 
-  model: any = {};
+  // We are now swapping this for a strongly typed User object
+  //model: any = {};
+  user: User;
 
   // Tracks the value and validity state of a group of FormControl instances.
   registerForm: FormGroup;
@@ -28,7 +32,8 @@ export class RegisterComponent implements OnInit {
   bsConfig: Partial<BsDatepickerConfig>;
 
   constructor(private authService: AuthService,
-    private alertify: AlertifyService, private fb: FormBuilder) { }
+    private alertify: AlertifyService, private fb: FormBuilder,
+    private router: Router) { }
 
   ngOnInit() {
 
@@ -74,6 +79,30 @@ export class RegisterComponent implements OnInit {
 
   register() {
 
+    // Since we are using reactive forms now, then we can check if the register form
+    // is in a valid state
+    if (this.registerForm.valid) {
+      // We will get the values in our register form and we will pass it to the
+      // user object by using Object.assign which copies the values of all
+      // enumerable own properties from one or more source objects to a
+      // target object.
+      this.user = Object.assign({}, this.registerForm.value);
+
+      // We will now register the user
+      this.authService.register(this.user).subscribe(() => {
+        this.alertify.success('Registration successful');
+      }, error => {
+        this.alertify.error(error);
+      }, () => {
+        // The third part of the subscribe method is what to do on complete
+        // and on complete, we will automatically
+        // log-in the user once they have successful registered
+        this.authService.login(this.user).subscribe(() => {
+          this.router.navigate(['/members']);
+        });
+      });
+    }
+
     //// For the 'success' and 'error' parameter, we will just use empty () since we are not using anything
     //// from this response
     //this.authService.register(this.model).subscribe(() => {
@@ -86,7 +115,7 @@ export class RegisterComponent implements OnInit {
     //  this.alertify.error(error);
     //});
 
-    console.log(this.registerForm.value);
+    //console.log(this.registerForm.value);
   }
 
   cancel() {
