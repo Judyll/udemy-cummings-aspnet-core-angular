@@ -16,7 +16,7 @@
       which is the <div class="card-img-wrapper"> should be relatively positioned element
   -->
   <div class="card-img-wrapper">
-    <img class="card-img-top" src="{{user.photoUrl}}" alt="{{user.knownAs}}" />
+    <img class="card-img-top" src="{{user.photoUrl || '../../../assets/user.png'}}" alt="{{user.knownAs}}" />
     <!--
         Add an ordered list of buttons which are inline so that the buttons will
         appear horizontally align.  We will also give it a class of .member-icons

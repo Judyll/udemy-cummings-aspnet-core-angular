@@ -87,7 +87,27 @@ export class PhotoEditorComponent implements OnInit {
           isMain: res.isMain
         };
 
+        // Add the newly uploaded photo to the photos array
         this.photos.push(photo);
+
+        // In our API PhotosController.AddPhotoForUser, we are checking to see if
+        // the user has already a main photo.  If there is no main photo, for example
+        // it is the first photo uploaded by the user, then the API will set the
+        // newly uploaded photo as the main photo.  So, if the newly uploaded photo
+        // is successful, then we can check if it is the main photo
+        if (photo.isMain) {
+
+          // We will then emit the photo URL to be consumed by the parent member-edit.component.ts
+          // or we can also say this.authService.changeMemberPhoto(photo.url) although I placed
+          // this on member-edit.component.ts -> updateMainPhoto(photoUrl)
+          this.getMemberPhotoChange.emit(photo.url);
+
+          // We will save the new photo url in the local storage so that the same main
+          // photo will be shown even when the user refreshes the page, we are finishing
+          // the 'user' information in the local storage in the app.component.ts -> ngOnInit()
+          this.authService.currentUser.photoUrl = photo.url;
+          localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
+        }
       }
     };
   }
