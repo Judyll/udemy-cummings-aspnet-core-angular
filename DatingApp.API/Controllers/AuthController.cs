@@ -36,33 +36,40 @@ namespace DatingApp.API.Controllers
         // the attribute [ApiController], then this is no longer necessary.  If we remove [ApiController],
         // then we need to use the [FromBody] attribute
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterNewUser(UserForRegisterDto userForRegister)
+        public async Task<IActionResult> RegisterNewUser(UserForRegisterDto userForRegisterDto)
         {
             // If we don't use [ApiController] attribute, then we need to check the ModelState
             // so that the validations specified in the UserForRegisterDto will be triggered
             //if (!ModelState.IsValid)
             //    return BadRequest(ModelState);
 
-            userForRegister.Username = userForRegister.Username.ToLower();
+            userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
 
-            if (await _repo.UserExists(userForRegister.Username))
+            if (await _repo.UserExists(userForRegisterDto.Username))
             {
                 return BadRequest("Username already exists.");
             }
 
-            var userToCreate = new User
-            {
-                UserName = userForRegister.Username
-            };
+            //_mapper.Map<User>(userForRegisterDto) means 'User' is the destination
+            // object to map and 'userForRegisterDto' is the source object
+            var userToCreate = _mapper.Map<User>(userForRegisterDto);
 
-            var createdUser = await _repo.Register(userToCreate, userForRegister.Password);
+            var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
 
-            // We will comeback and fix this later since we still don't have any
-            // page that shows the created user
-            //return CreatedAtRoute()
+            // This will be our return for the CreatedAtRoute.
+            // This is of type UserForDetailedDto so that it will not include sensitive
+            // data like password hash/salt and this is the same return type for
+            // the method UsersController.GetUser
+            var userToReturn = _mapper.Map<UserForDetailedDto>(createdUser);
+
+            // We will return a CreateAtRoute so that we can send back a location
+            // header with the request as well as the new resource we have created
+            return CreatedAtRoute("GetUser", 
+                new { controller = "Users", id = createdUser.Id },
+                userToReturn);
 
             // Just return a 201 Created status
-            return StatusCode(201);
+            //return StatusCode(201);
         }
 
         [HttpPost("login")]

@@ -37,7 +37,9 @@ namespace DatingApp.API.Controllers
         }
 
         // GET: api/Users/5
-        [HttpGet("{id}")]
+        // We need to add the 'Name' attribute since we will be using this
+        // as a return route for the 'RegisterNewUser' method in the AuthController
+        [HttpGet("{id}", Name = "GetUser")]
         public async Task<IActionResult> GetUser([FromRoute] int id)
         {
             if (!ModelState.IsValid)
