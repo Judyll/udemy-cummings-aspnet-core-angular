@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { FileUploadModule } from 'ng2-file-upload';
 import { JwtModule } from '@auth0/angular-jwt';
+import { TimeAgoPipe } from 'time-ago-pipe';
 
 // Local components
 import { AppComponent } from './app.component';
@@ -53,7 +54,9 @@ export function tokenGetter() {
     MemberCardComponent,
     MemberDetailComponent,
     MemberEditComponent,
-    PhotoEditorComponent    
+    PhotoEditorComponent,
+    // This is a pipe so we will add it on the declarations - https://www.npmjs.com/package/time-ago-pipe
+    TimeAgoPipe
   ],
   imports: [
     BrowserModule,
