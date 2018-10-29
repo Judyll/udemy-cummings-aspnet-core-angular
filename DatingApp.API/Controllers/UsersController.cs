@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
+using DatingApp.API.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,6 +11,12 @@ using System.Threading.Tasks;
 
 namespace DatingApp.API.Controllers
 {
+    // Since we are adding this on top of the controller, any time the controller
+    // methods are being called, we are going to make use of our LogUserActivity
+    // action filter which in turn update the last active property for the particular
+    // user
+    [ServiceFilter(typeof(LogUserActivity))]
+
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]

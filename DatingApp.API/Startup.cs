@@ -94,6 +94,10 @@ namespace DatingApp.API
 
             // Add the AutoMapper services
             services.AddAutoMapper();
+
+            // We want to create LogUserActivity per request so we will
+            // be using AddScoped
+            services.AddScoped<LogUserActivity>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
