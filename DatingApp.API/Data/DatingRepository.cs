@@ -46,7 +46,7 @@ namespace DatingApp.API.Data
 
         public async Task<bool> SaveAll()
         {
-            // If there are more than one changes being saved to the database,
+            // If there are one or more changes being saved to the database,
             // then this method will return true or else, it will return false
             return await _context.SaveChangesAsync() > 0;
         }
