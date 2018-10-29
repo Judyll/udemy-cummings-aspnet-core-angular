@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 
 namespace DatingApp.API.Helpers
@@ -20,6 +21,21 @@ namespace DatingApp.API.Helpers
             response.Headers.Add("Application-Error", message);
             response.Headers.Add("Access-Control-Expose-Headers", "Application-Error");
             response.Headers.Add("Access-Control-Allow-Origin", "*");
+        }
+
+        public static void AddPagination(this HttpResponse response, int currentPage, 
+            int itemsPerPage, int totalItems, int totalPages)
+        {
+            // This deals with what we are sending 'back' to the client
+
+            var paginationHeader = new PaginationHeader(currentPage, itemsPerPage,
+                totalItems, totalPages);
+
+            response.Headers.Add("Pagination", JsonConvert.SerializeObject(paginationHeader));
+
+            // We need to add Access-Control-Expose-Headers so that we will not get
+            // a CORS error
+            response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
         }
 
         public static int CalculateAge(this DateTime birthDate)
