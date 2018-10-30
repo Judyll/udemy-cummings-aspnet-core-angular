@@ -33,12 +33,28 @@ namespace DatingApp.API.Controllers
         }
 
         // GET: api/Users
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userParams">Typically, .NET CORE will figure out where to
+        /// get the parameters from.  But we will give it a hint [FromQuery] so
+        /// this will allow us to send an empty query string and .NET CORE
+        /// will use the default values we specified in the UserParams class</param>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
         {
-            var users = await _repo.GetUsers();
+            var users = await _repo.GetUsers(userParams);
 
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+
+            // Since we are on the controller, then we have access to 
+            // 'Response' which is of type HttpResponse.  And we can call
+            // our extension method for the HttpResponse which is AddPagination
+            // that we have created in Extensions.cs
+            // Remember, we are passing this as an header to the client
+            Response.AddPagination(users.CurrentPage, users.PageSize,
+                users.TotalCount, users.TotalPages);
 
             return Ok(usersToReturn);
         }

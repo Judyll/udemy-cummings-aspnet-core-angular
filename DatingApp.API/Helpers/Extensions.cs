@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 
 namespace DatingApp.API.Helpers
@@ -31,7 +32,16 @@ namespace DatingApp.API.Helpers
             var paginationHeader = new PaginationHeader(currentPage, itemsPerPage,
                 totalItems, totalPages);
 
-            response.Headers.Add("Pagination", JsonConvert.SerializeObject(paginationHeader));
+            // This will return in the header in the TitleCase something like
+            // Pagination →{"CurrenPage":1,"ItemsPerPage":10,"TotalItems":14,"TotalPages":2}
+            // But, since we will be consuming these headers on Angular, then we
+            // will change the formatting into camelCase
+            var camelCaseFormatter = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+            response.Headers.Add("Pagination", JsonConvert.SerializeObject(paginationHeader, 
+                camelCaseFormatter));
 
             // We need to add Access-Control-Expose-Headers so that we will not get
             // a CORS error
