@@ -29,7 +29,10 @@ export class MemberListComponent implements OnInit {
     // member-list.resolver.ts (MemberListResolver) where success['users'] is the property
     // name that we gave in the routes.ts.
     this.route.data.subscribe(success => {
-      this.users = success['users'];
+      // When we change the return type of the member-list.resolver.ts (MemberListResolver)
+      // to Observable<PaginatedResult<User[]>>, we will now use success['users'].result
+      // because the users are now in the .result field of the PaginatedResult type object
+      this.users = success['users'].result;
     });
   }
 

@@ -7,7 +7,7 @@
     /// </summary>
     public class PaginationHeader
     {
-        public int CurrenPage { get; set; }
+        public int CurrentPage { get; set; }
 
         public int ItemsPerPage { get; set; }
 
@@ -18,7 +18,7 @@
         public PaginationHeader(int currentPage, int itemsPerPage, 
             int totalItems, int totalPages)
         {
-            this.CurrenPage = currentPage;
+            this.CurrentPage = currentPage;
             this.ItemsPerPage = itemsPerPage;
             this.TotalItems = totalItems;
             this.TotalPages = totalPages;

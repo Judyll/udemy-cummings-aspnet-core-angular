@@ -33,7 +33,7 @@ namespace DatingApp.API.Helpers
                 totalItems, totalPages);
 
             // This will return in the header in the TitleCase something like
-            // Pagination →{"CurrenPage":1,"ItemsPerPage":10,"TotalItems":14,"TotalPages":2}
+            // Pagination →{"CurrentPage":1,"ItemsPerPage":10,"TotalItems":14,"TotalPages":2}
             // But, since we will be consuming these headers on Angular, then we
             // will change the formatting into camelCase
             var camelCaseFormatter = new JsonSerializerSettings
