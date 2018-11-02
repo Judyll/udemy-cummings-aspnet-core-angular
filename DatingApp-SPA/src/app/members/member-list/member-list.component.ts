@@ -5,6 +5,7 @@ import { User } from '../../_models/user';
 import { UserService } from '../../_services/user.service';
 import { AlertifyService } from '../../_services/alertify.service';
 import { ActivatedRoute } from '@angular/router';
+import { Pagination, PaginatedResult } from '../../_models/pagination';
 
 @Component({
   selector: 'app-member-list',
@@ -14,6 +15,7 @@ import { ActivatedRoute } from '@angular/router';
 export class MemberListComponent implements OnInit {
 
   users: User[];
+  pagination: Pagination;
 
   constructor(private userService: UserService, private alertify: AlertifyService,
     private route: ActivatedRoute) { }
@@ -33,17 +35,26 @@ export class MemberListComponent implements OnInit {
       // to Observable<PaginatedResult<User[]>>, we will now use success['users'].result
       // because the users are now in the .result field of the PaginatedResult type object
       this.users = success['users'].result;
+      this.pagination = success['users'].pagination;
     });
   }
 
-  // We no longer need this since we are using resolvers member-list.resolver.ts to
-  // get the data
-  //loadUsers() {
-  //  this.userService.getUsers().subscribe((success: User[]) => {
-  //    this.users = success;
-  //  }, error => {
-  //    this.alertify.error(error);
-  //  });
-  //}
+  // This is for the pagination and is copied from https://valor-software.com/ngx-bootstrap/#/pagination
+  pageChanged(event: any): void {
+    this.pagination.currentPage = event.page;
+    this.loadUsers();
+  }
+   
+  loadUsers() {
+    this.userService
+      .getUsers(this.pagination.currentPage, this.pagination.itemsPerPage)
+      .subscribe(
+        (res: PaginatedResult<User[]>) => {
+          this.users = res.result;
+          this.pagination = res.pagination;
+        }, error => {
+          this.alertify.error(error);
+      });
+  }
 
 }
