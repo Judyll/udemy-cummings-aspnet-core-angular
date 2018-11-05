@@ -15,6 +15,9 @@ import { Pagination, PaginatedResult } from '../../_models/pagination';
 export class MemberListComponent implements OnInit {
 
   users: User[];
+  user: User = JSON.parse(localStorage.getItem('user'));
+  genderList = [{ value: 'male', display: 'Males' }, { value: 'female', display: 'Females' }];
+  userParams: any = {};
   pagination: Pagination;
 
   constructor(private userService: UserService, private alertify: AlertifyService,
@@ -37,6 +40,10 @@ export class MemberListComponent implements OnInit {
       this.users = success['users'].result;
       this.pagination = success['users'].pagination;
     });
+
+    this.userParams.gender = (this.user.gender === 'female') ? 'male' : ' female';
+    this.userParams.minAge = 18;
+    this.userParams.maxAge = 99;
   }
 
   // This is for the pagination and is copied from https://valor-software.com/ngx-bootstrap/#/pagination
@@ -44,10 +51,17 @@ export class MemberListComponent implements OnInit {
     this.pagination.currentPage = event.page;
     this.loadUsers();
   }
+
+  resetFilters() {
+    this.userParams.gender = (this.user.gender === 'female') ? 'male' : ' female';
+    this.userParams.minAge = 18;
+    this.userParams.maxAge = 99;
+    this.loadUsers();
+  }
    
   loadUsers() {
     this.userService
-      .getUsers(this.pagination.currentPage, this.pagination.itemsPerPage)
+      .getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, this.userParams)
       .subscribe(
         (res: PaginatedResult<User[]>) => {
           this.users = res.result;

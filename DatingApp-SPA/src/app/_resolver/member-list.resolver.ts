@@ -22,6 +22,7 @@ export class MemberListResolver implements Resolve<PaginatedResult<User[]>>{
     private alertify: AlertifyService) { }
 
   resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<User[]>> {
+    
     // This automatically subscribe to the .getUsers() method so we don't need to
     // subscribe this ourselves.
     return this.userService.getUsers(this.pageNumber, this.pageSize)

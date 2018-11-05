@@ -1,5 +1,62 @@
+<div class="text-center mt-3">
+  <h2>Your matches - {{pagination.totalItems}} found</h2>
+</div>
+
 <!--mt for margin top-->
-<div class="container mt-5">
+<div class="container mt-3">
+
+  <!--Make this as an Angular form-->
+  <form class="form-inline" #form="ngForm" (ngSubmit)="loadUsers()" novalidate>
+    <div class="form-group">
+      <label for="minAge">Age From</label>
+      <!--
+          Since this is now a template form, we will just use [(ngModel)] for
+          two-way binding
+          -->
+      <input type="number"
+             class="form-control ml-1"
+             style="width: 70px"
+             id="minAge"
+             name="minAge"
+             [(ngModel)]="userParams.minAge"/>
+    </div>
+
+    <div class="form-group px-2">
+      <label for="maxAge">Age To</label>
+      <input type="number"
+             class="form-control ml-1"
+             style="width: 70px"
+             id="maxAge"
+             name="maxAge"
+             [(ngModel)]="userParams.maxAge"/>
+    </div>
+
+    <div class="form-group px-2">
+      <label for="gender">Show:</label>
+      <select class="form-control ml-1"
+              style="width: 130px"
+              id="gender"
+              name="gender"
+              [(ngModel)]="userParams.gender">
+        <option *ngFor="let gender of genderList" [value]="gender.value">
+          {{gender.display}}
+        </option>
+      </select>
+    </div>
+
+    <button type="submit"
+            class="btn btn-primary"
+            style="margin-left: 10px"
+            >Apply Filters</button>
+    <button type="button"
+            class="btn btn-info"
+            style="margin-left: 10px"
+            (click)="resetFilters()"
+            >Reset Filters</button>
+
+  </form>
+  <br />
+
   <div class="row">
     <!--
         Bootstrap uses 12 columns
