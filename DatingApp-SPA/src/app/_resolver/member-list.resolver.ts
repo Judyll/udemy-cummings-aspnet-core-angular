@@ -7,7 +7,7 @@ import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { PaginatedResult } from '../_models/pagination';
 
-// This is a resolver that will return an array of type User
+// This is a resolver that will return an array of type PaginatedResult<User[]>
 // This is consumed by member-list.component.ts as defined in the route.ts
 
 @Injectable({

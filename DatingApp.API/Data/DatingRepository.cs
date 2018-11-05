@@ -42,7 +42,9 @@ namespace DatingApp.API.Data
             // We don't execute .ToListAsync() here since we will
             // do it on the PagedList<T> class on the 
             // CreateAsync method
-            var users = _context.Users.Include(i => i.Photos);
+            var users = _context.Users.Include(i => i.Photos)
+                .Where(w => w.Id != userParams.UserId)
+                .Where(w => w.Gender == userParams.Gender);
 
             return await PagedList<User>.CreateAsync(users, 
                 userParams.PageNumber, userParams.PageSize);
