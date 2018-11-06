@@ -49,7 +49,8 @@ namespace DatingApp.API.Data
                 .Where(w => w.Id != userParams.UserId)
                 .Where(w => w.Gender == userParams.Gender)
                 .Where(w => w.DateOfBirth >= minDob
-                    && w.DateOfBirth <= maxDob);
+                    && w.DateOfBirth <= maxDob)
+                .OrderByDescending(o => o.LastActive);
 
             //if (userParams.MinAge != 18 || userParams.MaxAge != 99)
             //{
@@ -59,6 +60,19 @@ namespace DatingApp.API.Data
             //    users = users.Where(w => w.DateOfBirth >= minDob 
             //        && w.DateOfBirth <= maxDob);
             //}
+
+            if (!string.IsNullOrEmpty(userParams.OrderBy))
+            {
+                switch (userParams.OrderBy)
+                {
+                    case "created":
+                        users = users.OrderByDescending(u => u.Created);
+                        break;
+                    default:
+                        users = users.OrderByDescending(u => u.LastActive);
+                        break;
+                }
+            }
 
             return await PagedList<User>.CreateAsync(users, 
                 userParams.PageNumber, userParams.PageSize);

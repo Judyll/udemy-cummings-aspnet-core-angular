@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BsDropdownModule, TabsModule, BsDatepickerModule, PaginationModule } from 'ngx-bootstrap';
+import { BsDropdownModule, TabsModule, BsDatepickerModule, PaginationModule, ButtonsModule } from 'ngx-bootstrap';
 import { RouterModule } from '@angular/router';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -76,6 +76,8 @@ export function tokenGetter() {
     BsDatepickerModule.forRoot(),
     // Add the NGX pagination module - https://valor-software.com/ngx-bootstrap/#/pagination
     PaginationModule.forRoot(),
+    // Add the NGX buttons module - https://valor-software.com/ngx-bootstrap/#/buttons
+    ButtonsModule.forRoot(),
     // Add a router to our SPA which is defined in the routes.ts
     RouterModule.forRoot(appRoutes),
     // Import the NGX Gallery for our image gallery - https://lukasz-galka.github.io/ngx-gallery-demo/

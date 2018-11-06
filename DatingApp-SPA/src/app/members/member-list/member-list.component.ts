@@ -44,6 +44,7 @@ export class MemberListComponent implements OnInit {
     this.userParams.gender = (this.user.gender === 'female') ? 'male' : ' female';
     this.userParams.minAge = 18;
     this.userParams.maxAge = 99;
+    this.userParams.orderBy = 'lastActive';
   }
 
   // This is for the pagination and is copied from https://valor-software.com/ngx-bootstrap/#/pagination

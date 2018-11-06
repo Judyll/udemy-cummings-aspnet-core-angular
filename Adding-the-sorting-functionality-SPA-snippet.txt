@@ -1,0 +1,6 @@
+        <div class="col">
+            <div class="btn-group float-right">
+              <button type="button" name="orderBy" class="btn btn-primary">Last Active</button>
+              <button type="button" name="orderBy" class="btn btn-primary">Newest Members</button>
+            </div>
+          </div>
