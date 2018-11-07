@@ -2,6 +2,7 @@
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Helpers;
+using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -83,9 +84,7 @@ namespace DatingApp.API.Controllers
             var userFromRepo = await _repo.GetUser(id);
 
             if (userFromRepo == null)
-            {
                 return NotFound();
-            }
 
             var userToReturn = _mapper.Map<UserForDetailedDto>(userFromRepo);
 
@@ -107,9 +106,7 @@ namespace DatingApp.API.Controllers
             // service is receiving. On the AuthController at line #77, we are
             // setting the ClaimTypes.NameIdentifier equal to the user identifier
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-            {
                 return Unauthorized();
-            }
 
             var userFromRepo = await _repo.GetUser(id);
 
@@ -122,6 +119,39 @@ namespace DatingApp.API.Controllers
                 return NoContent();
 
             throw new Exception($"Updating user {id} failed on saved.");
+        }
+
+        [HttpPost("{id}/like/{recipientId}")]
+        public async Task<IActionResult> LikeUser(int id, int recipientId)
+        {
+            // The first thing that we want to do is to check the user that is
+            // attempting to update their profile matches the token that the
+            // service is receiving. On the AuthController at line #77, we are
+            // setting the ClaimTypes.NameIdentifier equal to the user identifier
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            // Check if the like exists
+            var like = await _repo.GetLike(id, recipientId);
+
+            if (like != null)
+                return BadRequest("You already liked this user.");
+
+            if (await _repo.GetUser(recipientId) == null)
+                return NotFound();
+
+            like = new Like
+            {
+                LikerId = id,
+                LikeeId = recipientId
+            };
+
+            _repo.Add(like);
+
+            if (await _repo.SaveAll())
+                return Ok();
+
+            return BadRequest("Failed to like user.");
         }
     }
 }

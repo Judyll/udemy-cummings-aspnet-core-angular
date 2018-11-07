@@ -2,7 +2,6 @@
 using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -96,6 +95,14 @@ namespace DatingApp.API.Data
         {
             return await _context.Photos.Where(w => w.UserId == userId)
                 .FirstOrDefaultAsync(f => f.IsMain);
+        }
+
+        public async Task<Like> GetLike(int userId, int recipientId)
+        {
+            // If the userId - recipientId does not exists, this method
+            // will return null
+            return await _context.Likes.FirstOrDefaultAsync(l => l.LikerId == userId
+                && l.LikeeId == recipientId);
         }
     }
 }
