@@ -33,7 +33,8 @@
       </li>
       <!--Button to hit 'like' the user-->
       <li class="list-inline-item">
-        <button class="btn btn-primary">
+        <button class="btn btn-primary"
+                (click)="sendLike(user.id)">
           <i class="fa fa-heart"></i>
         </button>
       </li>

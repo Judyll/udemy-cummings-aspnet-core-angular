@@ -105,4 +105,11 @@ export class UserService {
       '/photos/' + id);
   }
 
+  sendLike(id: number, recipientId: number) {
+    // Since this is a post request, we are required to send a body.
+    // We will be sending an empty object {}
+    return this.http.post(this.baseUrl + 'users/' + id +
+      '/like/' + recipientId, {});
+  }
+
 }
