@@ -2,6 +2,7 @@
 using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,12 +10,22 @@ namespace DatingApp.API.Data
 {
     public class DatingRepository : IDatingRepository
     {
+        #region Fields
+
         private readonly DataContext _context;
+
+        #endregion
+
+        #region Ctor
 
         public DatingRepository(DataContext context)
         {
             _context = context;
         }
+
+        #endregion
+
+        #region Methods
 
         public void Add<T>(T entity) where T : class
         {
@@ -49,7 +60,29 @@ namespace DatingApp.API.Data
                 .Where(w => w.Gender == userParams.Gender)
                 .Where(w => w.DateOfBirth >= minDob
                     && w.DateOfBirth <= maxDob)
-                .OrderByDescending(o => o.LastActive);
+                .OrderByDescending(o => o.LastActive)
+                .AsQueryable();
+
+            // Our 'Like' entity just contain list of integers
+            // Therefore, we will retrieve those list of integers
+            // using a private method, and then we will query those
+            // 'User' information based on those list of integers
+            // which are also User Ids.
+            if (userParams.Likers)
+            {
+                var userLikers = await GetUserLikes(userParams.UserId,
+                    userParams.Likers);
+
+                users = users.Where(u => userLikers.Contains(u.Id));
+            }
+
+            if (userParams.Likees)
+            {
+                var userLikees = await GetUserLikes(userParams.UserId,
+                    userParams.Likers);
+
+                users = users.Where(u => userLikees.Contains(u.Id));
+            }
 
             //if (userParams.MinAge != 18 || userParams.MaxAge != 99)
             //{
@@ -104,5 +137,24 @@ namespace DatingApp.API.Data
             return await _context.Likes.FirstOrDefaultAsync(l => l.LikerId == userId
                 && l.LikeeId == recipientId);
         }
+
+        #endregion
+
+        #region Utilities
+
+        private async Task<IEnumerable<int>> GetUserLikes(int id, bool likers)
+        {
+            var user = await _context.Users
+                .Include(u => u.Likers)
+                .Include(u => u.Likees)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (likers)
+                return user.Likers.Where(u => u.LikeeId == id).Select(u => u.LikerId);
+
+            return user.Likees.Where(u => u.LikerId == id).Select(u => u.LikeeId);
+        }
+
+        #endregion
     }
 }
