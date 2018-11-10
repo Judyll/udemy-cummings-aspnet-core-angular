@@ -8,6 +8,7 @@
   <ItemGroup>
     <None Remove="src\app\routes.ts" />
     <None Remove="src\app\_guards\prevent-unsaved-changes.guard.ts" />
+    <None Remove="src\app\_resolver\lists.resolver.ts" />
     <None Remove="src\app\_resolver\member-detail.resolver.ts" />
     <None Remove="src\app\_resolver\member-edit.resolver.ts" />
     <None Remove="src\app\_resolver\member-list.resolver.ts" />
@@ -26,6 +27,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="src\app\routes.ts" />
     <TypeScriptCompile Include="src\app\_guards\prevent-unsaved-changes.guard.ts" />
+    <TypeScriptCompile Include="src\app\_resolver\lists.resolver.ts" />
     <TypeScriptCompile Include="src\app\_resolver\member-edit.resolver.ts" />
     <TypeScriptCompile Include="src\app\_resolver\member-detail.resolver.ts" />
     <TypeScriptCompile Include="src\app\_resolver\member-list.resolver.ts" />

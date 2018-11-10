@@ -32,6 +32,7 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
 import { MemberEditResolver } from './_resolver/member-edit.resolver';
 import { PreventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
+import { ListsResolver } from './_resolver/lists.resolver';
 
 // Added a new way to handle the tokens using JwtModule.
 // We will get the token inside our app.module.ts, we will import the JwtModule
@@ -109,6 +110,7 @@ export function tokenGetter() {
     MemberDetailResolver,
     MemberListResolver,
     MemberEditResolver,
+    ListsResolver,
     PreventUnsavedChangesGuard
   ],
   // When the module is loaded, its gonna bootstrap the AppComponent which is the app.component.ts

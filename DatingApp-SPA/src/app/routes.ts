@@ -10,6 +10,7 @@ import { MemberListResolver } from './_resolver/member-list.resolver';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberEditResolver } from './_resolver/member-edit.resolver';
 import { PreventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
+import { ListsResolver } from './_resolver/lists.resolver';
 
 export const appRoutes: Routes = [
   // When the user is adding a url, or clicks on a link, or adding some path to the
@@ -45,7 +46,10 @@ export const appRoutes: Routes = [
         canDeactivate: [PreventUnsavedChangesGuard]
       },
       { path: 'messages', component: MessagesComponent },
-      { path: 'list', component: ListComponent }
+      {
+        path: 'list', component: ListComponent,
+        resolve: { users: ListsResolver }
+      }
     ]
   },  
   // redirect to the full path of the home URL 
