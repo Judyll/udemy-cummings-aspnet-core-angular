@@ -48,8 +48,9 @@ export class AuthService {
   changeMemberPhoto(photoUrl: string) {
     // This will update the value of the this.photoUrl instead of
     // the default which is '../../assets/user.png'
-    if (photoUrl)
+    if (photoUrl) {
       this.photoUrl.next(photoUrl);
+    }
   }
 
   // This will take the model parameter that we have specified in the nav.component.ts
@@ -59,7 +60,7 @@ export class AuthService {
 
     // We will return an http POST with first parameter as the URL, second is the Body which we will send the
     // model that will contain like
-    //{
+    // {
     //  "Username": "john",
     //  "Password": "password"
     // }
@@ -69,7 +70,7 @@ export class AuthService {
     // as application/json.  This is also the default header for Angular
     // Since this just a log-in request, we don't need a third parameter.
     // The response will return a token (as seen in Postman).  And in order to do Observable when it comes back
-    // from the server, we need to use rxjs operator.  We are using rxjs 6 for this course since we are using Angular 6.    
+    // from the server, we need to use rxjs operator.  We are using rxjs 6 for this course since we are using Angular 6.
     return this.http.post(this.baseUrl + 'login', model)
       // And in order to use rxjs map operators in Angular 6, we need to pass it through a pipe() method.
       // This allows us to chain rxjs operators with our request
@@ -96,8 +97,8 @@ export class AuthService {
             // to convert the string into an object
             localStorage.setItem('user', JSON.stringify(responseUser.user));
             this.decodedToken = this.jwtHelper.decodeToken(responseUser.token);
-            this.currentUser = responseUser.user;            
-            this.changeMemberPhoto(this.currentUser.photoUrl);              
+            this.currentUser = responseUser.user;
+            this.changeMemberPhoto(this.currentUser.photoUrl);
           }
         })
       );

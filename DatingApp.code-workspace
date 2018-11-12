@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "DatingApp.API"
+		},
+		{
+			"path": "DatingApp-SPA"
+		}
+	],
+	"settings": {}
+}
