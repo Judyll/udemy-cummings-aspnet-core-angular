@@ -1,4 +1,4 @@
-import { Photo } from "./photo";
+import { Photo } from './photo';
 
 // It is conventional to use lowercase in the properties
 // of a typescript file and is different from what we are doing in C# (title case)

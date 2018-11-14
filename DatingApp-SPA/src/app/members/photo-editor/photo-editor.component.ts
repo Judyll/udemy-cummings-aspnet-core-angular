@@ -138,7 +138,7 @@ export class PhotoEditorComponent implements OnInit {
 
       }, error => {
         this.alertify.error(error);
-      })
+      });
   }
 
   deletePhoto(id: number) {

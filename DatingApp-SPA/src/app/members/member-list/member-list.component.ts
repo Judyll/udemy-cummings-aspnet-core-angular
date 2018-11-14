@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-// We need to go UP an extra level '../../' because we are now on 2 levels lower 
+// We need to go UP an extra level '../../' because we are now on 2 levels lower
 import { User } from '../../_models/user';
 import { UserService } from '../../_services/user.service';
 import { AlertifyService } from '../../_services/alertify.service';
@@ -59,7 +59,7 @@ export class MemberListComponent implements OnInit {
     this.userParams.maxAge = 99;
     this.loadUsers();
   }
-   
+
   loadUsers() {
     this.userService
       .getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, this.userParams)

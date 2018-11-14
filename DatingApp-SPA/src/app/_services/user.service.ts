@@ -14,12 +14,12 @@ import { map } from 'rxjs/operators';
 // We will only need this if we don't configure JwtModule in app.module.ts
 
 // We will now create a header
-//const httpOptions = {
+// const httpOptions = {
 //  headers: new HttpHeaders({
 //    // Do not forget the 'space' after the 'Bearer'
 //    'Authorization': 'Bearer ' + localStorage.getItem('token')
 //  })
-//}
+// }
 
 @Injectable({
   providedIn: 'root'
@@ -56,16 +56,18 @@ export class UserService {
       params = params.append('orderBy', userParams.orderBy);
     }
 
-    // Check if we need to filter the users by Likers 
-    if (likesParam === 'Likers')
+    // Check if we need to filter the users by Likers
+    if (likesParam === 'Likers') {
       params = params.append('likers', 'true');
+    }
 
     // Check if we need to filter the users by Likees
-    if (likesParam === 'Likees')
-      params = params.append('likees', 'true');    
+    if (likesParam === 'Likees') {
+      params = params.append('likees', 'true');
+    }
 
-    //return this.http.get<User[]>(this.baseUrl + 'users/', httpOptions);
-    //return this.http.get<User[]>(this.baseUrl + 'users');
+    // return this.http.get<User[]>(this.baseUrl + 'users/', httpOptions);
+    // return this.http.get<User[]>(this.baseUrl + 'users');
     // We will now change what we are observing as part of the response
     // By specifying observe: 'response', we will now have access to the full
     // Http response and pass in the query string params.
@@ -84,7 +86,7 @@ export class UserService {
             // contains Pagination →{"CurrentPage":1,"ItemsPerPage":10,"TotalItems":14,"TotalPages":2}
             // which is configured the DatingApp.API.Helpers.Extensions.AddPagination method
           if (response.headers.get('Pagination') != null) {
-            paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'))
+            paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
           }
 
           return paginatedResult;
@@ -93,7 +95,7 @@ export class UserService {
   }
 
   getUser(id): Observable<User> {
-    //return this.http.get<User>(this.baseUrl + 'users/' + id, httpOptions);
+    // return this.http.get<User>(this.baseUrl + 'users/' + id, httpOptions);
     return this.http.get<User>(this.baseUrl + 'users/' + id);
   }
 
