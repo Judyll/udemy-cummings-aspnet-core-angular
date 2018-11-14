@@ -17,7 +17,6 @@ namespace DatingApp.API.Controllers
     // action filter which in turn update the last active property for the particular
     // user
     [ServiceFilter(typeof(LogUserActivity))]
-
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]

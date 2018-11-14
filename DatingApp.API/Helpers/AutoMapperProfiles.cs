@@ -54,6 +54,11 @@ namespace DatingApp.API.Helpers
             CreateMap<Photo, PhotoForReturnDto>();
             CreateMap<PhotoForCreationDto, Photo>();
             CreateMap<UserForRegisterDto, User>();
+
+            // We are using .ReverseMap() so that we can chain this mapping
+            // to create a mapping Message to MessageForCreationDto and mapping
+            // also MessageForCreationDto to Message.
+            CreateMap<MessageForCreationDto, Message>().ReverseMap();
         }
     }
 }
