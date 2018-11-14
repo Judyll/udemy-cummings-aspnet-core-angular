@@ -38,7 +38,7 @@ namespace DatingApp.API.Data
         /// This method will support the inbox and outbox for the messages
         /// </summary>
         /// <returns></returns>
-        Task<PagedList<Message>> GetMessagesForUser();
+        Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams);
 
         /// <summary>
         /// This method will be the conversation between two users.
