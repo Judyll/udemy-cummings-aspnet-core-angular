@@ -150,16 +150,17 @@ namespace DatingApp.API.Data
                 .Include(m => m.Recipient).ThenInclude(u => u.Photos)
                 .AsQueryable();
 
-            switch (messageParams.MessageContainer)
+            switch (messageParams.MessageContainer.ToLower())
             {
-                case "Inbox":
+                case "inbox":
                     messages = messages.Where(m => m.RecipientId == messageParams.UserId);
                     break;
-                case "Outbox":
+                case "outbox":
                     messages = messages.Where(m => m.SenderId == messageParams.UserId);
                     break;
                 default:
-                    messages = messages.Where(m => m.RecipientId == messageParams.UserId && m.IsRead == false);
+                    messages = messages.Where(m => m.RecipientId == messageParams.UserId 
+                    && m.IsRead == false);
                     break;
             }
 
