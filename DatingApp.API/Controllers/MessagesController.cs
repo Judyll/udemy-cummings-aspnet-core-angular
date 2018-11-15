@@ -73,6 +73,26 @@ namespace DatingApp.API.Controllers
             return Ok(messages);
         }
 
+        // We cannot use HttpGet("{recipientId}") because .NET CORE cannot determine the 
+        // difference betweent the existing route which is the HttpGet("{id}", Name = "GetMessage")
+        // even if we use 'recipientId' and 'id' as keywords
+        [HttpGet("thread/{recipientId}")]
+        public async Task<IActionResult> GetMessageThread(int userId, int recipientId)
+        {
+            // The first thing that we want to do is to check the user that is
+            // attempting to update their profile matches the token that the
+            // service is receiving. On the AuthController at line #77, we are
+            // setting the ClaimTypes.NameIdentifier equal to the user identifier
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var messagesFromRepo = await _repo.GetMessageThread(userId, recipientId);
+
+            var messageThread = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
+
+            return Ok(messageThread);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateMessage(int userId, 
             MessageForCreationDto messageForCreationDto)
