@@ -12,7 +12,7 @@ export interface Pagination {
 // But, for this class, we will make it a type of <T> to make it generic
 // so that we can use the same class when we will add pagination to messages
 // as well.
-export class PaginatedResult<T>{
+export class PaginatedResult<T> {
   result: T;
   pagination: Pagination;
 }

@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router'
+import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { MessagesComponent } from './messages/messages.component';
@@ -11,6 +11,7 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
 import { MemberEditResolver } from './_resolver/member-edit.resolver';
 import { PreventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
 import { ListsResolver } from './_resolver/lists.resolver';
+import { MessagesResolver } from './_resolver/messages.resolver';
 
 export const appRoutes: Routes = [
   // When the user is adding a url, or clicks on a link, or adding some path to the
@@ -45,14 +46,17 @@ export const appRoutes: Routes = [
         resolve: { user: MemberEditResolver },
         canDeactivate: [PreventUnsavedChangesGuard]
       },
-      { path: 'messages', component: MessagesComponent },
+      {
+        path: 'messages', component: MessagesComponent ,
+        resolve: { messages: MessagesResolver }
+      },
       {
         path: 'list', component: ListComponent,
         resolve: { users: ListsResolver }
       }
     ]
-  },  
-  // redirect to the full path of the home URL 
+  },
+  // redirect to the full path of the home URL
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 

@@ -10,7 +10,7 @@ import { PaginatedResult } from '../_models/pagination';
 @Injectable({
   providedIn: 'root'
 })
-export class ListsResolver implements Resolve<PaginatedResult<User[]>>{
+export class ListsResolver implements Resolve<PaginatedResult<User[]>> {
   pageNumber = 1;
   pageSize = 5;
   // Set the likesParams to 'Likers' which means return the list of users

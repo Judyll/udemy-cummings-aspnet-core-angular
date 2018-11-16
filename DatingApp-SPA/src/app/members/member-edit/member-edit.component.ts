@@ -34,7 +34,7 @@ export class MemberEditComponent implements OnInit {
     if (this.editForm.dirty) {
       $event.returnValue = true;
     }
-  }  
+  }
 
   constructor(private route: ActivatedRoute, private alertify: AlertifyService,
     private userService: UserService, private authService: AuthService) { }
@@ -77,7 +77,7 @@ export class MemberEditComponent implements OnInit {
         this.editForm.reset(this.user);
       }, error => {
         this.alertify.error(error);
-      });    
+      });
   }
 
   // This method handles the 'getMemberPhotoChange' event which is emitted from the child

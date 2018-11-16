@@ -68,7 +68,7 @@ export class MemberDetailComponent implements OnInit {
   // In the URL route, we are using /members/4 or members/2 or members/5 in which the numeric
   // value is the member ID
   // We no longer require this one when we implemented the member-detail.resolver.ts
-  //loadUser() {
+  // loadUser() {
     // We use the '+' preceeding operator to convert params['id'] from string to number
   //  this.userService.getUser(+this.route.snapshot.params['id'])
   //    .subscribe((success: User) => {
@@ -76,6 +76,6 @@ export class MemberDetailComponent implements OnInit {
   //    }, error => {
   //      this.alertify.error(error);
   //    });
-  //}
+  // }
 
 }
