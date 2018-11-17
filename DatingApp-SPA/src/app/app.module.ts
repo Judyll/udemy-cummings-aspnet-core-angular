@@ -34,6 +34,7 @@ import { PreventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.gu
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { ListsResolver } from './_resolver/lists.resolver';
 import { MessagesResolver } from './_resolver/messages.resolver';
+import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 
 // Added a new way to handle the tokens using JwtModule.
 // We will get the token inside our app.module.ts, we will import the JwtModule
@@ -58,7 +59,8 @@ export function tokenGetter() {
     MemberEditComponent,
     PhotoEditorComponent,
     // This is a pipe so we will add it on the declarations - https://www.npmjs.com/package/time-ago-pipe
-    TimeAgoPipe
+    TimeAgoPipe,
+    MemberMessagesComponent
   ],
   imports: [
     BrowserModule,
