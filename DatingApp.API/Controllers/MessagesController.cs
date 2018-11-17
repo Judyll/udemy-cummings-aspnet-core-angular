@@ -97,15 +97,25 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> CreateMessage(int userId, 
             MessageForCreationDto messageForCreationDto)
         {
+            // We will get the complete sender information and store it
+            // in memory so that AutoMapper can do some magic and automatically
+            // harvest any information from the memory once we do mapping
+            var sender = await _repo.GetUser(userId);
+
             // The first thing that we want to do is to check the user that is
             // attempting to update their profile matches the token that the
             // service is receiving. On the AuthController at line #77, we are
             // setting the ClaimTypes.NameIdentifier equal to the user identifier
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (sender.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
             messageForCreationDto.SenderId = userId;
 
+            // We are getting the recipient information from our repo but
+            // after that, we don't include that information as part of the 
+            // return data.  But, with AutoMapper's magic, since the recipient
+            // information is already in memory, it maps it automatically
+            // when we call var messageToReturn = _mapper.Map<MessageToReturnDto>(message);
             var recipient = await _repo.GetUser(messageForCreationDto.RecipientId);
 
             if (recipient == null)
@@ -115,16 +125,23 @@ namespace DatingApp.API.Controllers
 
             _repo.Add(message);
 
-            // After we added the message to our repository, we don't need to map this 
-            // back into a DTO so that we can return it.  What we are using for our
-            // MessageForCreationDto is good enough for our purposes to send back to
-            // our user.  That is why in the AutoMapperProfiles, we are using the
-            // .ReverseMap() method to chain the mapping of the Message to MessageForCreationDto
-            // and MessageForCreationDto to Message
-            var messageToReturn = _mapper.Map<MessageForCreationDto>(message);
-
             if (await _repo.SaveAll())
+            {
+                // After we added the message to our repository, we don't need to map this 
+                // back into a DTO so that we can return it.  What we are using for our
+                // MessageForCreationDto is good enough for our purposes to send back to
+                // our user.  That is why in the AutoMapperProfiles, we are using the
+                // .ReverseMap() method to chain the mapping of the Message to MessageForCreationDto
+                // and MessageForCreationDto to Message
+                // Recipient information is coming from var recipient = await _repo.GetUser(messageForCreationDto.RecipientId);
+                // even if we don't explicitly assigned it to the 'message' field
+                // since AutoMapper magically got it from the memory.
+                // We are placing this code nside the if statement so that we can get
+                // the correct message id when returned
+                var messageToReturn = _mapper.Map<MessageToReturnDto>(message);
+
                 return CreatedAtRoute("GetMessage", new { id = message.Id }, messageToReturn);
+            }                
 
             throw new Exception("Creating the message failed on save.");
         }

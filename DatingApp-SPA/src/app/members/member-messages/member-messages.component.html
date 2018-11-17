@@ -46,11 +46,21 @@
   </div>
 
   <div class="card-footer">
-    <form action="">
+    <!--
+      We will add a template reference variable called #messageForm which is of type
+      'ngForm'.  We are adding a ngSubmit method which checks first if the form is
+      valid, and if it is, then we will call the sendMessage() method
+    -->
+    <form #messageForm="ngForm" (ngSubmit)="messageForm.valid && sendMessage()">
       <div class="input-group">
-        <input type="text" class="form-control input-sm" placeholder="Send a private message">
+        <input type="text" 
+          [(ngModel)]="newMessage.content"
+          name="content"
+          required
+          class="form-control input-sm" 
+          placeholder="Send a private message">
         <div class="input-group-append">
-          <button class="btn btn-primary">Send</button>
+          <button class="btn btn-primary" [disabled]="!messageForm.valid">Send</button>
         </div>
       </div>
     </form>
