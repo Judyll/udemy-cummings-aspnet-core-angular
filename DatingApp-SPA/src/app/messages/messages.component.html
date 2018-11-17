@@ -41,9 +41,14 @@
         Each table row is clickable with router link in which, if the 
         messageContainer == 'Outbox', then it will send them to the 
         /members/<recipientId>
+          We are adding [queryParams]="{tab: 3}" so that our URL will 
+          have a query string and will look like http://localhost:4200/members/14?tab=3
+          We need this query string so that we can redirect the tab focus
+          to the Messages tab when we click each message row
       -->
       <tr *ngFor="let message of messages" 
-        [routerLink]="['/members', messageContainer == 'Outbox' ? message.recipientId : message.senderId]">
+        [routerLink]="['/members', messageContainer == 'Outbox' ? message.recipientId : message.senderId]"
+        [queryParams]="{tab: 3}">
         <td>{{message.content}}</td>
         <td>
           <div *ngIf="messageContainer != 'Outbox'">

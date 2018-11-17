@@ -48,7 +48,7 @@
           <div class="btn-group d-flex">
             <!--w-100 give the button a width of 100-->
             <button class="btn btn-primary w-100">Like</button>
-            <button class="btn btn-success w-100">Message</button>
+            <button class="btn btn-success w-100" (click)="selectTab(3)">Message</button>
           </div>
         </div>
       </div>
@@ -64,8 +64,12 @@
       <div class="tab-panel">
         <!--
             Taken from https://valor-software.com/ngx-bootstrap/#/tabs
+             As describe on the link https://valor-software.com/ngx-bootstrap/#/tabs#tabs-manual-select,
+             we are adding a template reference variable #memberTab to our tab
+            set so that we can reference it in our member-detail.component.ts component
+            using the @ViewChild decorator
         -->
-        <tabset class="member-tabset">
+        <tabset class="member-tabset" #memberTabs>
           <tab heading="About {{user.knownAs}}">
             <h4>Description</h4>
             <p>{{user.introduction}}</p>

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from '../../_models/user';
 import { UserService } from '../../_services/user.service';
 import { AlertifyService } from '../../_services/alertify.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
+import { TabsetComponent } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-member-detail',
@@ -11,6 +12,8 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gal
   styleUrls: ['./member-detail.component.css']
 })
 export class MemberDetailComponent implements OnInit {
+
+  @ViewChild('memberTabs') memberTabs: TabsetComponent;
 
   user: User;
 
@@ -32,6 +35,15 @@ export class MemberDetailComponent implements OnInit {
     // name that we gave in the routes.ts.
     this.route.data.subscribe(success => {
       this.user = success['user'];
+    });
+
+    // We will be subscribing to the query parameters and we have
+    // included in the router link in messages.component.html
+    // [routerLink]="['/members', messageContainer == 'Outbox' ? message.recipientId : message.senderId]"
+    // [queryParams]="{tab: 3}"
+    this.route.queryParams.subscribe(params => {
+      const selectedTab = params['tab'];
+      this.selectTab(selectedTab > 0 ? selectedTab : 0);
     });
 
     // Configure the gallery options and set how we want it to look
@@ -63,6 +75,10 @@ export class MemberDetailComponent implements OnInit {
     }
 
     return imageUrls;
+  }
+
+  selectTab(tabId: number) {
+    this.memberTabs.tabs[tabId].active = true;
   }
 
   // In the URL route, we are using /members/4 or members/2 or members/5 in which the numeric

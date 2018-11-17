@@ -40,7 +40,15 @@
       </li>
       <!--Button to send the user a message-->
       <li class="list-inline-item">
-        <button class="btn btn-primary">
+        <!--
+            We are adding [queryParams]="{tab: 3}" so that our URL will 
+            have a query string and will look like http://localhost:4200/members/14?tab=3
+            We need this query string so that we can redirect the tab focus
+            to the Messages tab when we click each message row
+        -->
+        <button class="btn btn-primary" 
+          [routerLink]="['/members', user.id]"
+          [queryParams]="{tab: 3}">
           <i class="fa fa-envelope"></i>
         </button>
       </li>
