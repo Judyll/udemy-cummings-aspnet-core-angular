@@ -177,4 +177,14 @@ export class UserService {
     return this.http.post(this.baseUrl + 'users/' + userId + '/messages/' + id, {});
   }
 
+  markAsRead(userId: number, messageId: number) {
+    this.http.post(this.baseUrl + 'users/' + userId + '/messages/' + messageId + '/read', {})
+    // We need to subscribe to this from the user service because we are not sending
+    // anything back in this case.  We just want to be a very simple method to mark
+    // individual message as read.  We will be calling this method inside the member-messages.component.ts
+    // because we want this to be executed each time the member messages tab is opened
+    // when the user clicks a particular message from their inbox or unread messages.
+    .subscribe();
+  }
+
 }
