@@ -47,7 +47,7 @@
           <!--d-flex will give the <div> a display of flex-->
           <div class="btn-group d-flex">
             <!--w-100 give the button a width of 100-->
-            <button class="btn btn-primary w-100">Like</button>
+            <button class="btn btn-primary w-100" (click)="sendLike(user.id)">Like</button>
             <button class="btn btn-success w-100" (click)="selectTab(3)">Message</button>
           </div>
         </div>
