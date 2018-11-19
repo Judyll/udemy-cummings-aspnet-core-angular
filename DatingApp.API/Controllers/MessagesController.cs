@@ -145,5 +145,38 @@ namespace DatingApp.API.Controllers
 
             throw new Exception("Creating the message failed on save.");
         }
+
+        // For deleting a message, we are adding an HttpPost instead of HttpDelete
+        // because we are not actually deleting a message unless both sides of the
+        // conversation have chosen to delete the message.  
+        [HttpPost("{id}")] // id - is the message ID
+        public async Task<IActionResult> DeleteMessage(int id, int userId)
+        {
+            // The first thing that we want to do is to check the user that is
+            // attempting to update their profile matches the token that the
+            // service is receiving. On the AuthController at line #77, we are
+            // setting the ClaimTypes.NameIdentifier equal to the user identifier
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var messageFromRepo = await _repo.GetMessage(id);
+
+            if (messageFromRepo == null)
+                return BadRequest("Could not find message.");
+
+            if (messageFromRepo.SenderId == userId)
+                messageFromRepo.SenderDeleted = true;
+
+            if (messageFromRepo.RecipientId == userId)
+                messageFromRepo.RecipientDeleted = true;
+
+            if (messageFromRepo.SenderDeleted && messageFromRepo.RecipientDeleted)
+                _repo.Delete(messageFromRepo);
+
+            if (await _repo.SaveAll())
+                return NoContent();
+
+            throw new Exception("Error deleting the message.");
+        }
     }
 }
