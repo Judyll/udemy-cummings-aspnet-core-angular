@@ -62,7 +62,18 @@
         </td>
         <td>{{message.messageSent | timeAgo}}</td>
         <td>
-          <button class="btn btn-danger">Delete</button>
+          <!--
+            For this table row, we are adding a router link
+            [routerLink]="['/members', messageContainer == 'Outbox' ? message.recipientId : message.senderId]"
+            which redirect us to the member page if we do a click event to 
+            any object in this row.  But, we don't want to do that in the delete flow.
+            So, we will add another click event which is the (click)="$event.stopPropagation()"
+          -->
+          <button class="btn btn-danger" 
+            (click)="$event.stopPropagation()" 
+            (click)="deleteMessage(message.id)">
+            Delete
+          </button>
         </td>
       </tr>      
     </table>

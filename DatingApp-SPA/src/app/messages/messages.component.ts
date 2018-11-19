@@ -55,4 +55,24 @@ export class MessagesComponent implements OnInit {
         }
       );
   }
+
+  deleteMessage(id: number) {
+    // We are giving the user to confirm if they will proceed on deleting the
+    // message or not
+    // We added the callback function () => {}
+    this.alertify.confirm('Are you sure you want to delete this message', () => {
+      // We added an anonymous function () => {} since we are not getting anything back
+      // from this function
+      this.userService.deleteMessage(id, this.authService.decodedToken.nameid).subscribe(() => {
+        // We need to remove the message immediately from the browser view that
+        // the user gonna see.  That means we are going to use the javascript 'splice'
+        // method to do so.
+        // We will find the index of the messages array and we will delete only 1 message
+        this.messages.splice(this.messages.findIndex(m => m.id === id), 1);
+        this.alertify.success('Message has been deleted.');
+      }, () => {
+        this.alertify.error('Failed to delete the message.');
+      });
+    });
+  }
 }
