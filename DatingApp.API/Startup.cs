@@ -143,10 +143,34 @@ namespace DatingApp.API
             // This is very loose policy and is suitable only when developing
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
-            // We can now tell our applicatin about the authentication we have setup
+            // We can now tell our application about the authentication we have setup
             app.UseAuthentication();
 
-            app.UseMvc();
+            // If we ran localhost:5000 without adding /api/xxxx/, we will get a 
+            // page can't be found error.  So, we need to configure our Kestrel
+            // server and tell it that we want to serve static files from the
+            // wwwroot folder.  
+            // By adding UseDefaultFiles(), we are telling our Kestrel server to
+            // serve index.html, or index.aspx, or index.htm or any default files
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
+            // If we refresh a page, for example localhost:5000/members, we will get
+            // a page can't be found error.  This is because our API has no idea
+            // what it should do if it has a route called /members since this is never
+            // defined in any of the controllers.  These are routes that are being 
+            // handled by Angular and not the API.
+            // So, what we are going to do is to tell our API which routes should be
+            // handled by Angular since it the API already know which routes are being
+            // handled by itself.
+            app.UseMvc(routes => {
+                // Configures a route that is automatically bypassed if the requested
+                // URL appears to be for a static file
+                routes.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults: new { controller = "Fallback", action = "Index" }
+                );
+            });
         }
     }
 }
