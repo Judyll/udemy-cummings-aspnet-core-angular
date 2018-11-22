@@ -17,6 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
+    // More information can be found in https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-2.1
     "DatingApp.API": {
       "commandName": "Project",
       "launchBrowser": true,

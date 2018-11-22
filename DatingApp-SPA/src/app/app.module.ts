@@ -94,6 +94,9 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
+        // In production, if we will have our Angular pages hosted in the same
+        // domain with the API, for example under the API wwwroot folder "../DatingApp.API/wwwroot",
+        // then we don't need to specify a whitelistedDomains
         whitelistedDomains: ['localhost:5000'],
         blacklistedRoutes: ['localhost:5000/api/auth']
       }
