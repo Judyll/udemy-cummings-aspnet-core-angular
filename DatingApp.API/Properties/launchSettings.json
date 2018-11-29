@@ -18,13 +18,16 @@
       }
     },
     // More information can be found in https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-2.1
+    // When setting to production mode, we need to run the command
+    // SET ASPNETCORE_ENVIRONMENT=Production
+    // Before we will run, for example, migration from Sqlite to Azure Sql Server
     "DatingApp.API": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/values",
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Production"
       }
     }
   }

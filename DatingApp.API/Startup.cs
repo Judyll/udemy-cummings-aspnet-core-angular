@@ -35,7 +35,8 @@ namespace DatingApp.API
             // We can have Sqlite for development and MySQL for production
             // We also added a configuration to ignore warnings in production
             services.AddDbContext<DataContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                // Added a configuration to ignore warnings in the console
                 .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.IncludeIgnoredWarning)));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
@@ -48,6 +49,13 @@ namespace DatingApp.API
                     options.SerializerSettings.ReferenceLoopHandling = 
                     Newtonsoft.Json.ReferenceLoopHandling.Ignore;                    
                 });
+
+            // Coming from Sqlite in development, we will create a new migration using 
+            // Sql Server inside Azure
+            // By using Database.Migrate(), this applies any pending migrations for the
+            // context to the database.  This will create the database if it does not
+            // already exists.
+            services.BuildServiceProvider().GetService<DataContext>().Database.Migrate();
 
             // CORS - Cross-Origin Resource Sharing.  It is a security measure which allows which
             // client to access our API.
@@ -124,7 +132,8 @@ namespace DatingApp.API
                 // Connection id "0HLH7GM9OPUNC", Request id "0HLH7GM9OPUNC:00000001": An unhandled exception was thrown by the application.
                 // Newtonsoft.Json.JsonSerializationException: Self referencing loop detected for property 'user' with type 'DatingApp.API.Models.User'.Path '[0].photos[0]'.
                 // This error in Postman is only shown as ==> Expected ',' instead of ''
-                .AddJsonOptions(options => {
+                .AddJsonOptions(options =>
+                {
                     options.SerializerSettings.ReferenceLoopHandling =
                     Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 });
@@ -224,7 +233,7 @@ namespace DatingApp.API
 
             // Seed the users
             // Just uncomment this if we ever we need to seed our database
-            //seeder.SeedUsers();
+            seeder.SeedUsers();
 
             // We need to call this before we will be calling UseMvc()
             // This is very loose policy and is suitable only when developing

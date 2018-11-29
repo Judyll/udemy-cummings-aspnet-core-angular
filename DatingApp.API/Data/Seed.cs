@@ -1,6 +1,7 @@
 ﻿using DatingApp.API.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DatingApp.API.Data
@@ -16,24 +17,27 @@ namespace DatingApp.API.Data
 
         public void SeedUsers()
         {
-            //Source: https://www.json-generator.com/
-
-            var userData = System.IO.File.ReadAllText("Data/UserSeedData.json");
-            var users = JsonConvert.DeserializeObject<List<User>>(userData);
-
-            foreach(var user in users)
+            if (!_context.Users.Any())
             {
-                CreatePasswordHash("password", out byte[] passwordHash, 
-                    out byte[] passwordSalt);
+                //Source: https://www.json-generator.com/
 
-                user.PasswordHash = passwordHash;
-                user.PasswordSalt = passwordSalt;
-                user.UserName = user.UserName.ToLower();
+                var userData = System.IO.File.ReadAllText("Data/UserSeedData.json");
+                var users = JsonConvert.DeserializeObject<List<User>>(userData);
 
-                _context.Users.Add(user);
-            }
+                foreach (var user in users)
+                {
+                    CreatePasswordHash("password", out byte[] passwordHash,
+                        out byte[] passwordSalt);
 
-            _context.SaveChanges();
+                    user.PasswordHash = passwordHash;
+                    user.PasswordSalt = passwordSalt;
+                    user.UserName = user.UserName.ToLower();
+
+                    _context.Users.Add(user);
+                }
+
+                _context.SaveChanges();
+            }            
         }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
