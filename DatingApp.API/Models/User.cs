@@ -1,18 +1,14 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 
 namespace DatingApp.API.Models
 {
-    public class User
+    // The default implementation of Microsoft.AspNetCore.Identity.IdentityUser`1 which
+    // uses a string as a primary key.  By using IdentityUser<int>, we are now specifying
+    // that our primary key is of type int
+    public class User : IdentityUser<int>
     {
-        public int Id { get; set; }
-
-        public string UserName { get; set; }
-
-        public byte[] PasswordHash { get; set; }
-
-        public byte[] PasswordSalt { get; set; }
-
         public string Gender { get; set; }
 
         public DateTime DateOfBirth { get; set; }
@@ -33,6 +29,8 @@ namespace DatingApp.API.Models
 
         public string Country { get; set; }
 
+        #region Navigation properties
+
         public ICollection<Photo> Photos { get; set; }
 
         public ICollection<Like> Likers { get; set; }
@@ -42,5 +40,9 @@ namespace DatingApp.API.Models
         public ICollection<Message> MessagesSent { get; set; }
 
         public ICollection<Message> MessagesReceived { get; set; }
+
+        public ICollection<UserRole> UserRoles { get; set; }
+
+        #endregion
     }
 }
