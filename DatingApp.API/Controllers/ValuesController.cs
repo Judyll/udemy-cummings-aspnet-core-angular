@@ -11,7 +11,15 @@ namespace DatingApp.API.Controllers
 {
     // Inherits from ControllerBase (and not Controller) which means this controller
     // does not have any View support
-    [Authorize]
+    //[Authorize] -- We are now removing this attribute since we are globally specifying
+    // authorization in the the Startup.cs class:
+    //services.AddMvc(options => {
+    //            var policy = new AuthorizationPolicyBuilder()
+    //                // This is going to require authentication globally
+    //                .RequireAuthenticatedUser()
+    //                .Build();
+    //options.Filters.Add(new AuthorizeFilter(policy));
+    //        })
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase

@@ -2,6 +2,7 @@
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -13,6 +14,16 @@ using System.Threading.Tasks;
 
 namespace DatingApp.API.Controllers
 {
+    // We are adding the [AllowAnonymous] attribute since we are globally specifying
+    // authorization in the the Startup.cs class:
+    //services.AddMvc(options => {
+    //            var policy = new AuthorizationPolicyBuilder()
+    //                // This is going to require authentication globally
+    //                .RequireAuthenticatedUser()
+    //                .Build();
+    //options.Filters.Add(new AuthorizeFilter(policy));
+    //        })
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase

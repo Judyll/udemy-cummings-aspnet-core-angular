@@ -14,7 +14,15 @@ using System.Threading.Tasks;
 
 namespace DatingApp.API.Controllers
 {
-    [Authorize]
+    //[Authorize] -- We are now removing this attribute since we are globally specifying
+    // authorization in the the Startup.cs class:
+    //services.AddMvc(options => {
+    //            var policy = new AuthorizationPolicyBuilder()
+    //                // This is going to require authentication globally
+    //                .RequireAuthenticatedUser()
+    //                .Build();
+    //options.Filters.Add(new AuthorizeFilter(policy));
+    //        })
     [Route("api/users/{userId}/photos")]
     [ApiController]
     public class PhotosController : ControllerBase

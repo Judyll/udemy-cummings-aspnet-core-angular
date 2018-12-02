@@ -1,12 +1,16 @@
 ﻿using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Helpers;
+using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
@@ -126,7 +130,80 @@ namespace DatingApp.API
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+            // This the configuration for Identity.  There are lots of configurations
+            // for Identity but we are making the configurations now as simple as possible
+            // AddIdentity --- is the complete .net core identity system and if you are 
+            // creating a .net core mvc project, then this would be a good one to use. But
+            // this one also includes cookie-based authentication and it automatically includes
+            // methods to redirect the user back to a default log-in page and this is all
+            // based on the razor views in mvc.
+            // AddIdentityCore --- since we are using Angular and not razor view, then we will
+            // use this which is only the shell for identity and we are just going to add
+            // the individual pieces we are using for identity which means we are going to
+            // avoid using cookie-based authentication and stick with our JWT token-bearer
+            // system that we are using up to now.
+            var builder = services.AddIdentityCore<User>(options =>
+            {
+                // We are configuring this just for development to allow
+                // weak passwords we are currently using.  In production,
+                // we need to make this strict
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 4;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            });
+
+            // NOTE: The 'builder' code below is not necessary if we are using AddIdentity
+            // and not AddIdentityCore.
+            // We need to add a configuration which is based on the facts that we need to 
+            // query a user and pull back all of its role at the same time.  This kind of
+            // information is almost hard to come-by since Microsoft's documentation around
+            // this is not that great.
+            // We are now creating a new instance of the IdentityBuilder with parameters
+            // in which builder.UserType is coming from the builder we just configured above,
+            // the Role type, and the builder.Services which is the IServiceCollection that
+            // we want to attach to.
+            // And in this builder, we want to add the entity framework classes that's gonna provide
+            // the functionality that we are going to use for Identity
+            builder = new IdentityBuilder(builder.UserType, typeof(Role), builder.Services);
+            // We are telling Identity that we want to use entity framework as our store
+            // And, if we add a new migration, you will see tables created for identity
+            builder.AddEntityFrameworkStores<DataContext>();
+            // A service that checks the roles
+            builder.AddRoleValidator<RoleValidator<Role>>();
+            // A service that creates and remove roles
+            builder.AddRoleManager<RoleManager<Role>>();
+            // A service that allows the user to log-in
+            builder.AddSignInManager<SignInManager<Role>>();
+
+            // We need to add authentication middleware as a service and we need to tell ASP.NET Core
+            // what type of authentication we are using
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
+                            .GetBytes(Configuration.GetSection("SecuritySettings:Token").Value)),
+                        // Our issuer and audience is localhost so we don't need to validate
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
+            // Inside MVC, we are adding options which is an authorization filter
+            // so that every request is automatically authenticated or we require
+            // authentication for every requests rather than using the [Authorized]
+            // attribute in each of the controllers
+            services.AddMvc(options => {
+                var policy = new AuthorizationPolicyBuilder()
+                    // This is going to require authentication globally
+                    .RequireAuthenticatedUser()
+                    .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 // The below option fixes issues like the below
                 // fail: Microsoft.AspNetCore.Server.Kestrel[13]
                 // Connection id "0HLH7GM9OPUNC", Request id "0HLH7GM9OPUNC:00000001": An unhandled exception was thrown by the application.
@@ -171,22 +248,6 @@ namespace DatingApp.API
 
             // Add the Seed class
             services.AddTransient<Seed>();
-
-            // We need to add authentication middleware as a service and we need to tell ASP.NET Core
-            // what type of authentication we are using
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
-                            .GetBytes(Configuration.GetSection("SecuritySettings:Token").Value)),
-                        // Our issuer and audience is localhost so we don't need to validate
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-                });
 
             // Add the AutoMapper services
             services.AddAutoMapper();

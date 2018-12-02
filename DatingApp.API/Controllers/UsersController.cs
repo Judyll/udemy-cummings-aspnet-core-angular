@@ -17,7 +17,15 @@ namespace DatingApp.API.Controllers
     // action filter which in turn update the last active property for the particular
     // user
     [ServiceFilter(typeof(LogUserActivity))]
-    [Authorize]
+    //[Authorize] -- We are now removing this attribute since we are globally specifying
+    // authorization in the the Startup.cs class:
+    //services.AddMvc(options => {
+    //            var policy = new AuthorizationPolicyBuilder()
+    //                // This is going to require authentication globally
+    //                .RequireAuthenticatedUser()
+    //                .Build();
+    //options.Filters.Add(new AuthorizeFilter(policy));
+    //        })
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
