@@ -1,21 +1,65 @@
 ﻿using DatingApp.API.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Data
 {
-    public class DataContext : DbContext
+    // Instead of inheriting from DbContext, we will now inherit
+    // from IdentityDbContext since this will give us now the support
+    // for entity-framework classes for Identity
+    // We need to add configurtions and types because of how we are using
+    // this and most of what we are doing is purely based on the need to
+    // have the Id as integers instead of string and for
+    // one particular query which is to get the users along with their roles.
+    // If we don't configure it this way, then we can't get the query to get
+    // the roles along side with the users.
+    public class DataContext : IdentityDbContext<User, Role, int, 
+        IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>, 
+        IdentityRoleClaim<int>, IdentityUserToken<int>>
     {
         public DataContext(DbContextOptions<DataContext> options)
             : base(options) { }
 
         public DbSet<Value> Values { get; set; }
-        public DbSet<User> Users { get; set; }
+
+        // We no longer needed the Users dbset since this will now be coming
+        // from Asp.net Core Identity
+        //public DbSet<User> Users { get; set; }
+
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Like> Likes { get; set; }
         public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            // Since we are using the IdentityDbContext now, we need to call
+            // this method on base so that this will configure the schema
+            // needed for the identity framework
+            base.OnModelCreating(builder);
+
+            // We are adding configuration for the UserRole entity
+            // so that our entity framework will know the relationship
+            // between the User, Role, and UserRole entity because
+            // a user can have one or many roles, and the roles and be
+            // assign to one or many users
+            builder.Entity<UserRole>(userRole => {
+
+                // The key for this entity will be made up of the UserId
+                // and the RoleId
+                userRole.HasKey(ur => new { ur.UserId, ur.RoleId });
+
+                userRole.HasOne(ur => ur.Role)
+                    .WithMany(ur => ur.UserRoles)
+                    .HasForeignKey(ur => ur.RoleId)
+                    .IsRequired();
+
+                userRole.HasOne(ur => ur.User)
+                    .WithMany(ur => ur.UserRoles)
+                    .HasForeignKey(ur => ur.UserId)
+                    .IsRequired();
+            });
+                
             // We haven't had the need to configure any of our DbSets relationships
             // explicitly yet. We have been OK with what EF does by convention with
             // the relationships of the User and Photos.
