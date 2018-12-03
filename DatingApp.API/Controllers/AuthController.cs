@@ -30,8 +30,6 @@ namespace DatingApp.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly AuthRepository _repo;
-
         #region Fields
         private readonly IConfiguration _config;
         private readonly UserManager<User> _userManager;
@@ -62,35 +60,29 @@ namespace DatingApp.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> RegisterNewUser(UserForRegisterDto userForRegisterDto)
         {
-            // If we don't use [ApiController] attribute, then we need to check the ModelState
-            // so that the validations specified in the UserForRegisterDto will be triggered
-            //if (!ModelState.IsValid)
-            //    return BadRequest(ModelState);
-
-            userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
-
-            if (await _repo.UserExists(userForRegisterDto.Username))
-            {
-                return BadRequest("Username already exists.");
-            }
-
             //_mapper.Map<User>(userForRegisterDto) means 'User' is the destination
             // object to map and 'userForRegisterDto' is the source object
             var userToCreate = _mapper.Map<User>(userForRegisterDto);
 
-            var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
+            var result = await _userManager.CreateAsync(userToCreate, 
+                userForRegisterDto.Password);
 
             // This will be our return for the CreatedAtRoute.
             // This is of type UserForDetailedDto so that it will not include sensitive
             // data like password hash/salt and this is the same return type for
             // the method UsersController.GetUser
-            var userToReturn = _mapper.Map<UserForDetailedDto>(createdUser);
+            var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
 
-            // We will return a CreateAtRoute so that we can send back a location
-            // header with the request as well as the new resource we have created
-            return CreatedAtRoute("GetUser", 
-                new { controller = "Users", id = createdUser.Id },
-                userToReturn);
+            if (result.Succeeded)
+            {
+                // We will return a CreateAtRoute so that we can send back a location
+                // header with the request as well as the new resource we have created
+                return CreatedAtRoute("GetUser",
+                    new { controller = "Users", id = userToCreate.Id },
+                    userToReturn);
+            }
+
+            return BadRequest(result.Errors);
 
             // Just return a 201 Created status
             //return StatusCode(201);
