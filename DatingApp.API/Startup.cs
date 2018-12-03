@@ -174,7 +174,7 @@ namespace DatingApp.API
             // A service that creates and remove roles
             builder.AddRoleManager<RoleManager<Role>>();
             // A service that allows the user to log-in
-            builder.AddSignInManager<SignInManager<Role>>();
+            builder.AddSignInManager<SignInManager<User>>();
 
             // We need to add authentication middleware as a service and we need to tell ASP.NET Core
             // what type of authentication we are using

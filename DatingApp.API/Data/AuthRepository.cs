@@ -22,11 +22,16 @@ namespace DatingApp.API.Data
                 .FirstOrDefaultAsync(f => f.UserName.Equals(username.Trim(),
                 StringComparison.InvariantCultureIgnoreCase));
 
-            if (user != null 
-                && VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-            {
-                return user;
-            }
+            if (user == null)
+                return null;
+
+            // Since we are now using ASP.NET Core Identity, we no longer need
+            // to verify the password ourselves.
+            //if (user != null 
+            //    && VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            //{
+            //    return user;
+            //}
 
             return null;
         }
@@ -35,8 +40,10 @@ namespace DatingApp.API.Data
         {
             CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
 
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
+            // Since we are no using ASP.NET Core Identity, we no longer need
+            // to hash the password ourselves.
+            //user.PasswordHash = passwordHash;
+            //user.PasswordSalt = passwordSalt;
 
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
