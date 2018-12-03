@@ -26,37 +26,9 @@ namespace DatingApp.API.Data
 
                 foreach (var user in users)
                 {
-                    // Since we are no using ASP.NET Core Identity, we no longer need
-                    // to hash the password ourselves.
-                    // CreatePasswordHash("password", out byte[] passwordHash,
-                    //  out byte[] passwordSalt);
-                    //user.PasswordHash = passwordHash;
-                    //user.PasswordSalt = passwordSalt;
-
-                    //user.UserName = user.UserName.ToLower();
-
-                    //_context.Users.Add(user);
-
                     _userManager.CreateAsync(user, "password").Wait();
                 }
-
-                //_context.SaveChanges();
             }            
         }
-
-        // Since we are no using ASP.NET Core Identity, we no longer need
-        // to hash the password ourselves.
-        //private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        //{
-        //    // This not the only way to secure a password
-        //    // HMAC -- Hash-based Message Authentication Code
-        //    using (var hmac = new System.Security.Cryptography.HMACSHA512())
-        //    {
-        //        // We will use this key/salt to unlock the password hash
-        //        passwordSalt = hmac.Key;
-        //        // We need to provide our password as byte array by using Text.Encoding
-        //        passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-        //    }
-        //}
     }
 }

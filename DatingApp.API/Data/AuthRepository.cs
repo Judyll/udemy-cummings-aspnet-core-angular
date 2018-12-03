@@ -25,25 +25,12 @@ namespace DatingApp.API.Data
             if (user == null)
                 return null;
 
-            // Since we are now using ASP.NET Core Identity, we no longer need
-            // to verify the password ourselves.
-            //if (user != null 
-            //    && VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-            //{
-            //    return user;
-            //}
-
             return null;
         }
 
         public async Task<User> Register(User user, string password)
         {
             CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
-
-            // Since we are no using ASP.NET Core Identity, we no longer need
-            // to hash the password ourselves.
-            //user.PasswordHash = passwordHash;
-            //user.PasswordSalt = passwordSalt;
 
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();

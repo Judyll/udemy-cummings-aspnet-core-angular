@@ -3,7 +3,9 @@ using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -28,18 +30,29 @@ namespace DatingApp.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IConfiguration _config;
-        private readonly IAuthRepository _repo;
-        private readonly IMapper _mapper;
+        private readonly AuthRepository _repo;
 
-        public AuthController(IConfiguration config, IAuthRepository repo,
+        #region Fields
+        private readonly IConfiguration _config;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IMapper _mapper;        
+        #endregion
+
+        #region Ctor
+        public AuthController(IConfiguration config, 
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
             IMapper mapper)
         {
             _config = config;
-            _repo = repo;
+            _userManager = userManager;
+            _signInManager = signInManager;
             _mapper = mapper;
         }
+        #endregion
 
+        #region Public Methods
         // Parameters that we send up from our methods via Http, ASP.NET Core MVC will automatically try to
         // infer the parameters from either the body, from the query string, or from the form.  We can give
         // the RegisterNewUser a hint by adding an attribute [FromBody]
@@ -84,45 +97,23 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> LoginUser(UserForLoginDto userForLogin)
+        public async Task<IActionResult> LoginUser(UserForLoginDto userForLoginDto)
         {
-            var userFromRepo = await _repo.Login(userForLogin.Username.ToLower(), 
-                userForLogin.Password);
+            // We are using the option to find the user by name.
+            // There are other options that can be used like find by Id or find by Email
+            // The find by Id will not really be suitable in our case because we are
+            // specifying that the user Id is of type <int> and not <string>
+            var user = await _userManager.FindByNameAsync(userForLoginDto.Username);
 
-            if (userFromRepo != null)
+            // We use the sign in manager to check for the password
+            var result = await _signInManager.CheckPasswordSignInAsync(user, 
+                userForLoginDto.Password, false);
+
+            if (result.Succeeded)
             {
-                // Build-up a token that we are going to return to the user.
-                // Our token will contain two bits of information about the user -- Id and UserName
-                // We can have additional information to this token since this token can be validated by the server
-                // without making a database call.  Once the server gets the token, it take a look inside it
-                // and it does not need to go to the database to get the username or user Id
-                var claims = new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
-                    new Claim(ClaimTypes.Name, userFromRepo.UserName)
-                };
-
-                // We also need a key to sign our token and this part is going to be hashed and it is not readable
-                // inside our token itself.
-                var key = new SymmetricSecurityKey(Encoding.UTF8
-                    .GetBytes(_config.GetSection("SecuritySettings:Token").Value));
-
-                // We also need to generate some signing credentials based on the generated key
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-                // We also need to create a security token descriptor which will contain our claims,
-                // our expiry date for our tokens and the signing credentials
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Subject = new ClaimsIdentity(claims),
-                    Expires = DateTime.Now.AddDays(1),
-                    SigningCredentials = creds
-                };
-
-                // We also need a token handler
-                var tokenHandler = new JwtSecurityTokenHandler();
-
-                var token = tokenHandler.CreateToken(tokenDescriptor);
+                // We are including the Photos in the user object
+                var appUser = await _userManager.Users.Include(p => p.Photos)
+                    .FirstOrDefaultAsync(u => u.NormalizedUserName == userForLoginDto.Username.ToUpper());
 
                 // We will be using this 'user' object to be return back as an
                 // anonymous object to the calling domain.  This is useful like having 
@@ -131,12 +122,12 @@ namespace DatingApp.API.Controllers
                 // We are setting the mapping profile for the UserForListDto
                 // in the AutoMapperProfiles class so that the main photo url
                 // will automatically be mapped.
-                var user = _mapper.Map<UserForListDto>(userFromRepo);
+                var userToReturn = _mapper.Map<UserForListDto>(appUser);
 
                 return Ok(new
                 {
-                    token = tokenHandler.WriteToken(token),
-                    user
+                    token = GenerateJwtToken(appUser),
+                    user = userToReturn
                 });
             }
 
@@ -144,6 +135,48 @@ namespace DatingApp.API.Controllers
             // but the password is wrong so to avoid bruteforcing the password
             return Unauthorized();
         }
+
+        #endregion
+
+        #region Utilities
+        private string GenerateJwtToken(User user)
+        {
+            // Build-up a token that we are going to return to the user.
+            // Our token will contain two bits of information about the user -- Id and UserName
+            // We can have additional information to this token since this token can be validated by the server
+            // without making a database call.  Once the server gets the token, it take a look inside it
+            // and it does not need to go to the database to get the username or user Id
+            var claims = new[]
+            {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.UserName)
+                };
+
+            // We also need a key to sign our token and this part is going to be hashed and it is not readable
+            // inside our token itself.
+            var key = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(_config.GetSection("SecuritySettings:Token").Value));
+
+            // We also need to generate some signing credentials based on the generated key
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            // We also need to create a security token descriptor which will contain our claims,
+            // our expiry date for our tokens and the signing credentials
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = creds
+            };
+
+            // We also need a token handler
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return tokenHandler.WriteToken(token);
+        }
+        #endregion
 
     }
 }
