@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -131,18 +132,27 @@ namespace DatingApp.API.Controllers
         #endregion
 
         #region Utilities
-        private string GenerateJwtToken(User user)
+
+        private async Task<string> GenerateJwtToken(User user)
         {
             // Build-up a token that we are going to return to the user.
             // Our token will contain two bits of information about the user -- Id and UserName
             // We can have additional information to this token since this token can be validated by the server
             // without making a database call.  Once the server gets the token, it take a look inside it
             // and it does not need to go to the database to get the username or user Id
-            var claims = new[]
+            var claims = new List<Claim>
             {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.UserName)
-                };
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
+            };
+
+            // We will be getting the roles for this particular user
+            var roles = await _userManager.GetRolesAsync(user);
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             // We also need a key to sign our token and this part is going to be hashed and it is not readable
             // inside our token itself.
@@ -166,8 +176,11 @@ namespace DatingApp.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
+            // We can verify the generated token in
+            // JWT.IO allows you to decode, verify and generate JWT. - https://jwt.io/
             return tokenHandler.WriteToken(token);
         }
+
         #endregion
 
     }
