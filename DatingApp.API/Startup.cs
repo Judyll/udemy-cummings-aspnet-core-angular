@@ -191,6 +191,23 @@ namespace DatingApp.API
                     };
                 });
 
+            // For example, in the ValuesController, in the GetValues() method, we have
+            // the [Authorize(Roles = "Admin, Moderator")] attribute which means only the
+            // user with Admin and Moderator role can access the resource. But, there
+            // is an alternative to this which is the policy-based authorization
+            services.AddAuthorization(options =>
+            {
+                // These are the policies we have and we are going to keep it simple
+                // These policies can be quite flexible, we are just going to use it to 
+                // define roles for a specific action in the controller
+                options.AddPolicy("RequireAdminRole", policy => 
+                    policy.RequireRole("Admin"));
+                options.AddPolicy("ModeratePhotoRole", policy => 
+                    policy.RequireRole("Admin", "Moderator"));
+                options.AddPolicy("VipOnly", policy =>
+                    policy.RequireRole("VIP"));
+            });
+
             // Inside MVC, we are adding options which is an authorization filter
             // so that every request is automatically authenticated or we require
             // authentication for every requests rather than using the [Authorized]

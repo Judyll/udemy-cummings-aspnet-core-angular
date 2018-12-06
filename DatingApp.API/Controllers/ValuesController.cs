@@ -31,7 +31,7 @@ namespace DatingApp.API.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Moderator")]
         // GET: api/Values
         [HttpGet]
         public IEnumerable<Value> GetValues()
