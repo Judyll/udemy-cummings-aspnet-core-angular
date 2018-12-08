@@ -8,7 +8,7 @@ namespace DatingApp.API.Data
     // Instead of inheriting from DbContext, we will now inherit
     // from IdentityDbContext since this will give us now the support
     // for entity-framework classes for Identity
-    // We need to add configurtions and types because of how we are using
+    // We need to add configurations and types because of how we are using
     // this and most of what we are doing is purely based on the need to
     // have the Id as integers instead of string and for
     // one particular query which is to get the users along with their roles.
