@@ -56,7 +56,16 @@ export const appRoutes: Routes = [
         resolve: { users: ListsResolver }
       },
       {
-        path: 'admin', component: AdminPanelComponent
+        path: 'admin', component: AdminPanelComponent,
+        // How do we tell our route which roles we want to allow ???
+        // What we can also pass along with the route is a 'data' property
+        // and we can access our route 'data' inside our AuthGuard (auth.guard.ts).
+        // In the 'data' property, we specify 'roles' and we specify an
+        // array of roles that we want to allow for this particual route
+        // In our AuthGuard (auth.guard.ts), we can check which roles are allowed for a particular
+        // route and make a decision to wether we will allow the routes to be activated
+        // or not.
+        data: { roles: ['Admin', 'Moderator']}
       }
     ]
   },

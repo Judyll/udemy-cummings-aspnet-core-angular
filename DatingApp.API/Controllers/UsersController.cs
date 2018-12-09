@@ -59,7 +59,7 @@ namespace DatingApp.API.Controllers
             userParams.UserId = currentUserId;
 
             if (string.IsNullOrEmpty(userParams.Gender))
-                userParams.Gender = string.Equals(userFromRepo.Gender.ToLowerInvariant(), "male") 
+                userParams.Gender = string.Equals(userFromRepo.Gender?.ToLowerInvariant(), "male") 
                     ? "female" : "male";
 
             var users = await _repo.GetUsers(userParams);

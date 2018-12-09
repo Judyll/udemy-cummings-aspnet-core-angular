@@ -130,4 +130,47 @@ export class AuthService {
     // then it will return true else it will return false
     return !this.jwtHelper.isTokenExpired(token);
   }
+
+  roleMatch(allowedRoles): boolean {
+    /**
+      Our token is looking like
+
+      eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.
+      eyJuYW1laWQiOiIxMSIsInVuaXF1ZV9uYW1lIjoiQWRtaW4iLCJyb2xlIjpbIkFkbWluIiwi
+      TW9kZXJhdG9yIl0sIm5iZiI6MTU0NDMzNzU3MywiZXhwIjoxNTQ0NDIzOTczLCJpYXQi
+      OjE1NDQzMzc1NzN9.qJV0KHOdhBtZLQ-jR_KJC8JqAcr89holAUnQe7kAvAHBPrhMnAw1
+      8Nkeao5ebnk2UvPfPEYdcZhcQ4sk_ZK0ew
+
+      and if we debug it on jwt.io, the below is the result:
+      {
+        "nameid": "11",
+        "unique_name": "Admin",
+        "role": [
+          "Admin",
+          "Moderator"
+        ],
+        "nbf": 1544337573,
+        "exp": 1544423973,
+        "iat": 1544337573
+      }
+
+      The token is stored in the this.decodedToken field so we can get the roles
+      if we will use this.decodedToken.role
+    */
+    const userRoles = this.decodedToken.role as Array<string>;
+
+    let isMatch = false;
+    allowedRoles.forEach(element => {
+      // .includes determine whether an array includes a certain element, returning
+      // true or false as appropriate
+      if (userRoles.includes(element)) {
+        // If we will use return true, this method will not work correctly.
+        // Therefore, we need to add the field isMatch = true.
+        isMatch = true;
+        return;
+      }
+    });
+
+    return isMatch;
+  }
 }

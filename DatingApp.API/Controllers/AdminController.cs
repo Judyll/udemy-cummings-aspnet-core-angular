@@ -71,7 +71,7 @@ namespace DatingApp.API.Controllers
             // We need to remove in the roles that has been deselected
             // from the list in the SPA
             result = await _userManager.RemoveFromRolesAsync(user, 
-                selectedRoles.Except(selectedRoles));
+                userRoles.Except(selectedRoles));
 
             if (!result.Succeeded)
                 return BadRequest("Failed to remove the roles.");
