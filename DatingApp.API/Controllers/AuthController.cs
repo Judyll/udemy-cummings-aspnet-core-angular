@@ -119,7 +119,26 @@ namespace DatingApp.API.Controllers
 
                 return Ok(new
                 {
-                    token = GenerateJwtToken(appUser),
+                    /**
+                        If we don't add the .Result method, then the below is what we
+                        can get under the browser dev tools -> network -> select 'login' 
+                        -> preview
+
+                        token: {,…}
+                        asyncState: null
+                        creationOptions: 0
+                        exception: null
+                        id: 2
+                        isCanceled: false
+                        isCompleted: true
+                        isCompletedSuccessfully: true
+                        isFaulted: false
+                        result: "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJTdXNhbiIsInJvbGUiOlsiTWVtYmVyIiwiTW9kZXJhdG9yIl0sIm5iZiI6MTU0NDMzNjczOCwiZXhwIjoxNTQ0NDIzMTM4LCJpYXQiOjE1NDQzMzY3Mzh9.tik1k_OlVJbFYWMKAPnefERO8ciS4nIUiBXvsJPVVOelBilfnrxOaAguuUh807ltdg37vxrGuvfi8NHhfY8_OQ"
+                        status: 5
+
+                        We need to add the .Result to get the token only
+                     **/
+                    token = GenerateJwtToken(appUser).Result,
                     user = userToReturn
                 });
             }
