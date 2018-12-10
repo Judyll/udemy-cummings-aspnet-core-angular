@@ -16,7 +16,11 @@
       <li class="nav-item" routerLinkActive="active">
         <a class="nav-link" [routerLink]="['/messages']">Messages</a>
       </li>
-      <li class="nav-item" routerLinkActive="active">
+      <!--
+        *appHasRole is a structural directive defined in
+        hasRole.directive.ts
+      -->
+      <li *appHasRole="['Admin', 'Moderator']" class="nav-item" routerLinkActive="active">
         <a class="nav-link" [routerLink]="['/admin']">Admin</a>
       </li>
     </ul>
@@ -36,7 +40,7 @@
       <a class="dropdown-toggle text-light"
          dropdownToggle (click)="false">
         <!--Add a pipe titlecase which converts the output into title case-->
-        Welcome {{authService.decodedToken?.unique_name | titlecase}}
+        Welcome {{ authService.decodedToken?.unique_name | titlecase }}
       </a>
 
       <div class="dropdown-menu mt-3" *dropdownMenu>

@@ -14,7 +14,7 @@ export class NavComponent implements OnInit {
   model: any = {};
   photoUrl: string;
 
-  constructor(private authService: AuthService,
+  constructor(public authService: AuthService,
     private alertify: AlertifyService, private router: Router) { }
 
   ngOnInit() {
@@ -25,7 +25,7 @@ export class NavComponent implements OnInit {
     // the photo-editor.component.ts
     this.authService.currentPhotoUrl.subscribe(returnUrl => {
       this.photoUrl = returnUrl;
-    })
+    });
   }
 
   login() {
@@ -46,7 +46,7 @@ export class NavComponent implements OnInit {
   }
 
   loggedIn() {
-    //const token = localStorage.getItem('token');
+    // const token = localStorage.getItem('token');
 
     // We will use a third party library called angular-jwt to manage the
     // token we stored in the localStorage
@@ -64,7 +64,7 @@ export class NavComponent implements OnInit {
     // version 2.0.0
 
     // If there is a value in this token, then it will return true else it will return false
-    //return !!token;
+    // return !!token;
     return this.authService.loggedIn();
   }
 
