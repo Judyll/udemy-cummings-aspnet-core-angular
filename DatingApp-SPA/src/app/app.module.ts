@@ -37,6 +37,9 @@ import { MessagesResolver } from './_resolver/messages.resolver';
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 import { HasRoleDirective } from './_directives/hasRole.directive';
+import { UserManagementComponent } from './admin/user-management/user-management.component';
+import { PhotoManagementComponent } from './admin/photo-management/photo-management.component';
+import { AdminService } from './_services/admin.service';
 
 // Added a new way to handle the tokens using JwtModule.
 // We will get the token inside our app.module.ts, we will import the JwtModule
@@ -64,7 +67,9 @@ export function tokenGetter() {
     TimeAgoPipe,
     MemberMessagesComponent,
     AdminPanelComponent,
-    HasRoleDirective
+    HasRoleDirective,
+    UserManagementComponent,
+    PhotoManagementComponent
   ],
   imports: [
     BrowserModule,
@@ -122,7 +127,8 @@ export function tokenGetter() {
     MemberEditResolver,
     ListsResolver,
     MessagesResolver,
-    PreventUnsavedChangesGuard
+    PreventUnsavedChangesGuard,
+    AdminService
   ],
   // When the module is loaded, its gonna bootstrap the AppComponent which is the app.component.ts
   bootstrap: [AppComponent]

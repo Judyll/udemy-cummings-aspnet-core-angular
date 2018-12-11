@@ -18,7 +18,7 @@ export class RegisterComponent implements OnInit {
   @Output() cancelRegister = new EventEmitter();
 
   // We are now swapping this for a strongly typed User object
-  //model: any = {};
+  // model: any = {};
   user: User;
 
   // Tracks the value and validity state of a group of FormControl instances.
@@ -44,12 +44,12 @@ export class RegisterComponent implements OnInit {
     // Create the register form in the ngOnInit() life cycle
     // which takes form controls and out-of-the-box validators as well
     // This is another way of creating a form
-    //this.registerForm = new FormGroup({
+    // this.registerForm = new FormGroup({
     //  username: new FormControl('', Validators.required),
     //  password: new FormControl('', [Validators.required, Validators.minLength(4),
     //  Validators.maxLength(8)]),
     //  confirmPassword: new FormControl('', Validators.required)
-    //}, this.passwordMatchValidator);
+    // }, this.passwordMatchValidator);
 
     this.createRegisterForm();
   }
@@ -105,17 +105,17 @@ export class RegisterComponent implements OnInit {
 
     //// For the 'success' and 'error' parameter, we will just use empty () since we are not using anything
     //// from this response
-    //this.authService.register(this.model).subscribe(() => {
+    // this.authService.register(this.model).subscribe(() => {
     //  this.alertify.success('Registration successful');
-    //}, error => {
+    // }, error => {
     //  // This will be the http response that we will get back from the server
     //  // Typical error configured is a Bad Request that we set in \DatingApp.API\Controllers\AuthController.cs
     //  // RegisterNewUser method or model state validations (required, string length) that we
     //  // set on \DatingApp.API\Dtos\UserForRegisterDto.cs
     //  this.alertify.error(error);
-    //});
+    // });
 
-    //console.log(this.registerForm.value);
+    // console.log(this.registerForm.value);
   }
 
   cancel() {
