@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BsDropdownModule, TabsModule, BsDatepickerModule, PaginationModule, ButtonsModule } from 'ngx-bootstrap';
+import { BsDropdownModule, TabsModule, BsDatepickerModule, PaginationModule, ButtonsModule, ModalModule } from 'ngx-bootstrap';
 import { RouterModule } from '@angular/router';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -40,6 +40,7 @@ import { HasRoleDirective } from './_directives/hasRole.directive';
 import { UserManagementComponent } from './admin/user-management/user-management.component';
 import { PhotoManagementComponent } from './admin/photo-management/photo-management.component';
 import { AdminService } from './_services/admin.service';
+import { RolesModalComponent } from './admin/roles-modal/roles-modal.component';
 
 // Added a new way to handle the tokens using JwtModule.
 // We will get the token inside our app.module.ts, we will import the JwtModule
@@ -69,7 +70,8 @@ export function tokenGetter() {
     AdminPanelComponent,
     HasRoleDirective,
     UserManagementComponent,
-    PhotoManagementComponent
+    PhotoManagementComponent,
+    RolesModalComponent
   ],
   imports: [
     BrowserModule,
@@ -111,7 +113,10 @@ export function tokenGetter() {
       }
     }),
     // Import the tab module so that we can use the tab controls in our components
-    TabsModule.forRoot()
+    TabsModule.forRoot(),
+    // Import the Modals for our modals which we used when editing user roles
+    // - https://valor-software.com/ngx-bootstrap/#/modals
+    ModalModule.forRoot()
   ],
   // Add the services we have created
   // Add the error interceptors
@@ -129,6 +134,16 @@ export function tokenGetter() {
     MessagesResolver,
     PreventUnsavedChangesGuard,
     AdminService
+  ],
+  // Entry components are any component that Angular loads imperatively/necessarily
+  // by time. All the components we have added so far are loaded declaratively and when
+  // we use a selector to load that component, then Angular creates the html representation
+  // of that component and inserts it into the DOM of the selected element.  But, modals
+  // are different since we don't have a selector for the modals that is why we need
+  // to add the modals to the entry component.
+  // https://valor-software.com/ngx-bootstrap/#/modals#service-component
+  entryComponents: [
+    RolesModalComponent
   ],
   // When the module is loaded, its gonna bootstrap the AppComponent which is the app.component.ts
   bootstrap: [AppComponent]
