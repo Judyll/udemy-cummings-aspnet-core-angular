@@ -32,18 +32,45 @@ export class UserManagementComponent implements OnInit {
     });
   }
 
-  editRolesModal() {
+  editRolesModal(user: User) {
     const initialState = {
-      list: [
-        'Open a modal with component',
-        'Pass your data',
-        'Do something else',
-        '...'
-      ],
-      title: 'Modal with component'
+      user,
+      roles: this.getRolesArray(user)
     };
     this.bsModalRef = this.modalService.show(RolesModalComponent, {initialState});
     this.bsModalRef.content.closeBtnName = 'Close';
+  }
+
+  private getRolesArray(user: User) {
+    const roles = [];
+    const userRoles = user.roles;
+    const availableRoles: any[] = [
+      {name: 'Admin', value: 'Admin'},
+      {name: 'Moderator', value: 'Moderator'},
+      {name: 'Member', value: 'Member'},
+      {name: 'VIP', value: 'VIP'}
+    ];
+
+    // We need to display which roles the user is a member of that we are going to display
+    // in our modal.  So, we need to loop to the availableRoles array and check if any of the
+    // userRoles match and show them as 'checked' if they are.
+    for (let i = 0; i < availableRoles.length; i++) {
+      let isMatch = false;
+      for (let j = 0; j < userRoles.length; j++) {
+        if (availableRoles[i].name === userRoles[j]) {
+          isMatch = true;
+          availableRoles[i].checked = true;
+          roles.push(availableRoles[i]);
+          break;
+        }
+      }
+      if (!isMatch) {
+        availableRoles[i].checked = false;
+        roles.push(availableRoles[i]);
+      }
+    }
+
+    return roles;
   }
 
 }
