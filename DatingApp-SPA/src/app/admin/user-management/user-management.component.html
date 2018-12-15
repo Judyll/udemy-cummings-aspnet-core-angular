@@ -9,6 +9,10 @@
     <tr *ngFor="let user of users">
       <td>{{user.id}}</td>
       <td>{{user.userName}}</td>
+      <!--
+        Because this is an array of string, then Angular will automatically display 
+        this roles as a comma-separated values        
+      -->
       <td>{{user.roles}}</td>
       <td><button class="btn btn-info" (click)="editRolesModal(user)">Edit Roles</button></td>
     </tr>

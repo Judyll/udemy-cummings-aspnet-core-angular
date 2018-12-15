@@ -11,13 +11,22 @@
   -->
   <form #rolesForm="ngForm" id="form-roles">
     <div class="form-check" *ngFor="let role of roles">
-      <input type="checkbox" class="form-check-input" value="{{role.name}}" [checked]="role.checked">
+      <!--
+        We will make the checkbox [disabled] if the user is Admin to prevent the Admin 
+        from accidentally removing itself from the Admin group
+      -->
+      <input type="checkbox" 
+        class="form-check-input" 
+        value="{{role.name}}" 
+        [checked]="role.checked"
+        (change)="role.checked = !role.checked"        
+        [disabled]="role.name === 'Admin' && user.userName === 'Admin'">
       <label>{{role.name}}</label>
     </div>
   </form>
 </div>
 <div class="modal-footer">
   <!--We are associating this button to the form-->
-  <button type="button" class="btn btn-success" form="form-roles">Submit</button>
+  <button type="button" class="btn btn-success" (click)="updateRoles()" form="form-roles">Submit</button>
   <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Cancel</button>
 </div>
