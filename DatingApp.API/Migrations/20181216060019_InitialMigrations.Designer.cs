@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatingApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20181203045938_IdentityInit")]
-    partial class IdentityInit
+    [Migration("20181216060019_InitialMigrations")]
+    partial class InitialMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -69,6 +69,8 @@ namespace DatingApp.API.Migrations
                     b.Property<DateTime>("DateAdded");
 
                     b.Property<string>("Description");
+
+                    b.Property<bool>("IsApproved");
 
                     b.Property<bool>("IsMain");
 

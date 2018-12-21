@@ -87,7 +87,7 @@ namespace DatingApp.API.Controllers
                 return Unauthorized();
             }
 
-            var userFromRepo = await _repo.GetUser(userId);
+            var userFromRepo = await _repo.GetUser(userId, true);
 
             // Store the file that will be send to the storage
             var file = photoForCreationDto.File;
@@ -184,7 +184,7 @@ namespace DatingApp.API.Controllers
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
-            var userFromRepo = await _repo.GetUser(userId);
+            var userFromRepo = await _repo.GetUser(userId, true);
 
             if (!userFromRepo.Photos.Any(a => a.Id == id))
                 return Unauthorized();
@@ -218,7 +218,7 @@ namespace DatingApp.API.Controllers
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
-            var userFromRepo = await _repo.GetUser(userId);
+            var userFromRepo = await _repo.GetUser(userId, true);
 
             if (!userFromRepo.Photos.Any(a => a.Id == id))
                 return Unauthorized();

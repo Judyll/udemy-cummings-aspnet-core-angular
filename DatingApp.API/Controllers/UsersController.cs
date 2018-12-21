@@ -54,7 +54,7 @@ namespace DatingApp.API.Controllers
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            var userFromRepo = await _repo.GetUser(currentUserId);
+            var userFromRepo = await _repo.GetUser(currentUserId, true);
 
             userParams.UserId = currentUserId;
 
@@ -83,12 +83,12 @@ namespace DatingApp.API.Controllers
         [HttpGet("{id}", Name = "GetUser")]
         public async Task<IActionResult> GetUser([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            // We are comparing the ClaimTypes.NameIdentifier value from the user's
+            // token to the id passed in the route path.  And if they match, then
+            // this means it is the current user
+            var isCurrentUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) == id;
 
-            var userFromRepo = await _repo.GetUser(id);
+            var userFromRepo = await _repo.GetUser(id, isCurrentUser);
 
             if (userFromRepo == null)
                 return NotFound();
@@ -103,11 +103,6 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> PutUser([FromRoute] int id, 
             [FromBody] UserForUpdateDto userForUpdateDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             // The first thing that we want to do is to check the user that is
             // attempting to update their profile matches the token that the
             // service is receiving. On the AuthController at line #77, we are
@@ -115,7 +110,7 @@ namespace DatingApp.API.Controllers
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
-            var userFromRepo = await _repo.GetUser(id);
+            var userFromRepo = await _repo.GetUser(id, true);
 
             // Get the information from the userForUpdateDto and map it to 
             // the userFromRepo
@@ -144,7 +139,7 @@ namespace DatingApp.API.Controllers
             if (like != null)
                 return BadRequest("You already liked this user.");
 
-            if (await _repo.GetUser(recipientId) == null)
+            if (await _repo.GetUser(recipientId, false) == null)
                 return NotFound();
 
             like = new Like

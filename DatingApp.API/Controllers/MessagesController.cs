@@ -108,7 +108,7 @@ namespace DatingApp.API.Controllers
             // We will get the complete sender information and store it
             // in memory so that AutoMapper can do some magic and automatically
             // harvest any information from the memory once we do mapping
-            var sender = await _repo.GetUser(userId);
+            var sender = await _repo.GetUser(userId, true);
 
             // The first thing that we want to do is to check the user that is
             // attempting to update their profile matches the token that the
@@ -124,7 +124,7 @@ namespace DatingApp.API.Controllers
             // return data.  But, with AutoMapper's magic, since the recipient
             // information is already in memory, it maps it automatically
             // when we call var messageToReturn = _mapper.Map<MessageToReturnDto>(message);
-            var recipient = await _repo.GetUser(messageForCreationDto.RecipientId);
+            var recipient = await _repo.GetUser(messageForCreationDto.RecipientId, false);
 
             if (recipient == null)
                 return BadRequest("Could not find user.");

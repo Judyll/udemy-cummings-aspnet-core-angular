@@ -14,6 +14,8 @@ namespace DatingApp.API.Models
 
         public bool IsMain { get; set; }
 
+        public bool IsApproved { get; set; }
+
         /// <summary>
         /// This will handle the PublicId response which is returned from 
         /// Cloudinary

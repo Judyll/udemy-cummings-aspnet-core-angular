@@ -102,6 +102,12 @@ namespace DatingApp.API.Data
                 .HasOne(m => m.Recipient)
                 .WithMany(m => m.MessagesReceived)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // We are adding a global query filter -- https://docs.microsoft.com/en-us/ef/core/querying/filters
+            // and we are only globally sending photos which are approved.  
+            // This means 'all' APIs accessing this datacontext will only get the photos
+            // that are approved.
+            builder.Entity<Photo>().HasQueryFilter(p => p.IsApproved);
         }
     }
 }

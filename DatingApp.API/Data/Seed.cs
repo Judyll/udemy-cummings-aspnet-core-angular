@@ -44,6 +44,7 @@ namespace DatingApp.API.Data
                 // Create the users
                 foreach (var user in users)
                 {
+                    user.Photos.SingleOrDefault().IsApproved = true;
                     _userManager.CreateAsync(user, "password").Wait();
                     _userManager.AddToRoleAsync(user, "Member").Wait();
                 }
@@ -52,7 +53,18 @@ namespace DatingApp.API.Data
                 // access to all parts of our application
                 var adminUser = new User
                 {
-                    UserName = "Admin"
+                    UserName = "Admin",
+                    Gender = "male",
+                    Photos = new List<Photo>
+                    {
+                        new Photo
+                        {
+                            Url = "https://randomuser.me/api/portraits/men/20.jpg",
+                            IsMain = true,
+                            Description = "Lorem proident nostrud adipisicing do.",
+                            IsApproved = true
+                        }
+                    }
                 };
 
                 var result = _userManager.CreateAsync(adminUser, "password").Result;

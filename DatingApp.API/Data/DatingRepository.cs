@@ -37,12 +37,22 @@ namespace DatingApp.API.Data
             _context.Remove(entity);
         }
 
-        public async Task<User> GetUser(int id)
+        public async Task<User> GetUser(int id, bool isCurrentUser)
         {
             // Photo are called 'navigation properties' for the User class
             // Therefore, we can include them in the query by using the 'Include()' method
-            var user = await _context.Users.Include(i => i.Photos)
-                .FirstOrDefaultAsync(f => f.Id == id);
+            var query = _context.Users.Include(p => p.Photos).AsQueryable();
+
+            // In our DataContext.OnModelCreating method, we are adding the global filter
+            // builder.Entity<Photo>().HasQueryFilter(p => p.IsApproved);
+            // to only return the photos that are approved.
+            // So, we need to check if it is the current user.  If true, then we will
+            // need to call the .IgnoreQueryFilter() so that we can
+            // send all the photos regardless if it is approved or not.
+            if (isCurrentUser)
+                query = query.IgnoreQueryFilters();
+
+            var user = await query.FirstOrDefaultAsync(u => u.Id == id);
 
             return user;
         }
@@ -119,7 +129,14 @@ namespace DatingApp.API.Data
 
         public async Task<Photo> GetPhoto(int id)
         {
-            var photo = await _context.Photos.FirstOrDefaultAsync(f => f.Id == id);
+            // In our DataContext.OnModelCreating method, we are adding the global filter
+            // builder.Entity<Photo>().HasQueryFilter(p => p.IsApproved);
+            // to only return the photos that are approved.
+            // So, for getting an individual photo, then we are just adding the
+            // .IgnoreQueryFilters() method to return any photo either approved or not
+            var photo = await _context.Photos
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(f => f.Id == id);
 
             return photo;
         }

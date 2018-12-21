@@ -68,6 +68,8 @@ namespace DatingApp.API.Migrations
 
                     b.Property<string>("Description");
 
+                    b.Property<bool>("IsApproved");
+
                     b.Property<bool>("IsMain");
 
                     b.Property<string>("PublicId");

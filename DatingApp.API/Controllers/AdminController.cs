@@ -7,6 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using DatingApp.API.Models;
 using DatingApp.API.Dtos;
+using Microsoft.Extensions.Options;
+using DatingApp.API.Helpers;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 
 namespace DatingApp.API.Controllers
 {
@@ -17,13 +21,25 @@ namespace DatingApp.API.Controllers
         #region Fields
         private readonly DataContext _context;
         private readonly UserManager<User> _userManager;
+        private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
+        private readonly Cloudinary _cloudinary;
         #endregion
 
         #region Ctor
-        public AdminController(DataContext context, UserManager<User> userManager)
+        public AdminController(DataContext context, UserManager<User> userManager, 
+            IOptions<CloudinarySettings> cloudinaryConfig)
         {
             _context = context;
             _userManager = userManager;
+            _cloudinaryConfig = cloudinaryConfig;
+
+            Account acc = new Account(
+                _cloudinaryConfig.Value.CloudName,
+                _cloudinaryConfig.Value.ApiKey,
+                _cloudinaryConfig.Value.ApiSecret
+            );
+
+            _cloudinary = new Cloudinary(acc);
         }
         #endregion
 
@@ -83,9 +99,79 @@ namespace DatingApp.API.Controllers
         [Authorize(Policy = "ModeratePhotoRole")]
         // The route path is photosformoderation
         [HttpGet("photosformoderation")]
-        public IActionResult GetPhotosForModeration()
+        public async Task<IActionResult> GetPhotosForModeration()
         {
-            return Ok("Admins or moderators can see this.");
+            var photos = await _context.Photos
+                // We are including the user information since we need to display
+                // it in together with the photo
+                .Include(u => u.User)
+                // We are ingoring the filters to include the photos that is not
+                // approved yet
+                .IgnoreQueryFilters()
+                .Where(p => p.IsApproved == false)
+                .Select(u => new
+                {
+                    u.Id,
+                    u.User.UserName,
+                    u.Url,
+                    u.IsApproved
+                }).ToListAsync();
+
+            return Ok(photos);
+        }
+
+        [Authorize(Policy = "ModeratePhotoRole")]
+        [HttpPost("approvephoto/{photoId}")]
+        public async Task<IActionResult> ApprovePhoto(int photoId)
+        {
+            var photo = await _context.Photos
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(p => p.Id == photoId);
+
+            if (photo == null)
+                return BadRequest("Photo does not exists.");
+
+            photo.IsApproved = true;
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [Authorize(Policy = "ModeratePhotoRole")]
+        [HttpPost("rejectphoto/{photoId}")]
+        public async Task<IActionResult> RejectPhoto(int photoId)
+        {
+            var photo = await _context.Photos
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(p => p.Id == photoId);
+
+            if (photo == null)
+                return BadRequest("Photo does not exists.");
+
+            if (photo.IsMain)
+                return BadRequest("You cannot reject the main photo.");
+
+            // Check if the photo has a public Id.  If it does, then it is a cloudinary
+            // photo and we will delete it in cloudinary
+            if (photo.PublicId != null)
+            {
+                var deleteParams = new DeletionParams(photo.PublicId);
+
+                var result = _cloudinary.Destroy(deleteParams);
+
+                if (result.Result == "ok")
+                    _context.Photos.Remove(photo);
+            }
+
+            if (photo.PublicId == null)
+            {
+                _context.Photos.Remove(photo);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
 
         #endregion
