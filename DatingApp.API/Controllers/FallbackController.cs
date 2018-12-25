@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.IO;
 
 namespace DatingApp.API.Controllers
@@ -8,6 +9,7 @@ namespace DatingApp.API.Controllers
     /// </summary>
     public class FallbackController : Controller
     {
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return PhysicalFile(Path.Combine(Directory.GetCurrentDirectory(),
